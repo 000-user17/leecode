@@ -1,0 +1,22 @@
+class Solution {
+    /*时间复杂度On，空间复杂度O1*/
+    /*双指针法，最好用while语句，左边一个指针判断是否为0，为0看右边指针，如果为0继续前进，不为0与左边指针元素交换；
+    左边指针不为0时，左右指针+1
+    如果右边指针超出数组大小，结束循环*/
+public:
+    void moveZeroes(vector<int>& nums) {
+        int i=0;
+        for(int j=1 ; j<nums.size() ; j++){
+            if(nums[i] == 0){
+                while(j<nums.size() && nums[j] == 0) ++j;
+                if(j<nums.size()) {
+                    nums[i] = nums[j];
+                    nums[j] = 0;
+                    ++i;
+                }
+                else break;
+            }
+           else ++i;
+        }
+    }
+};
