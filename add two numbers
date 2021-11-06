@@ -1,0 +1,49 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    /*时间复杂度为O(max(m,n)),空间复杂度O(abs(m-n))
+    思路，最后返回p1,如果p1->val+p2->val 大于0，分两种情况，p1->next=null或p1->next不为空
+    为空则创建新节点，并且保留进位1，不为空则直接在val基础上加进位1
+    如果p1->val+p2->val 小于0，则判断如果p1 next和p2 next都在，则不管
+    如果p1next不在，p2next在，则在p1后新建一个节点并让p1next=0，方便下次循环相加
+    如果p1next在或者不在，p2已经为空了，则直接结束循环，说明已经到头，因为后续p1中就算还有节点，也不会发生进位
+    循环下面p1前进一次，p2不为空时前进一次*/
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *p1 = l1 , *p2 = l2;
+        while(p1 || p2){
+           int x1=p1->val;
+           int x2=p2 == NULL? 0:p2->val;
+           if(x1+x2 < 10) {
+               p1->val = x1+x2;
+               if(!p2 && !p1->next) break;
+               else if(!p1->next && p2->next){
+                   ListNode *temp = new ListNode(0);
+                   p1->next = temp;
+               }
+           }
+
+           else if(x1+x2>=10){
+               p1->val = x1+x2-10;
+               if(!p1->next){
+                   ListNode *temp = new ListNode(1);
+                   p1->next = temp;
+               }
+               else if(p1->next){
+                   p1->next->val++;
+               }
+           }
+           p1 = p1->next;
+           p2 = p2==NULL?NULL:p2->next;
+        }
+        return l1;
+    }
+};
