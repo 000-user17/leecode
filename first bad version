@@ -1,0 +1,18 @@
+// The API isBadVersion is defined for you.
+// bool isBadVersion(int version);
+
+/*思路：二分法，如果med是bad，则firstbad肯定再med或med之前，所以high=med
+如果med是true，则firstbad肯定再med之后，low=med+1
+所以low=high时可以收敛到firstbad*/
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        int low=1, high=n;
+        while(low<high){
+            int med = (long)low+high >> 1;  //low和high相加越界的解决方法
+            if(!isBadVersion(med)) low = med+1;
+            else if(isBadVersion(med)) high = med;  //else不能接括号
+        }
+        return low;
+    }
+};
