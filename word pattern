@@ -1,0 +1,32 @@
+class Solution {
+    /*bijection双射，简单来说就是一个x对应一个y，一个y对应一个x的一对一关系，并且满射，都能找到与之对应的
+    还要判断以下是否个数能对应上*/
+public:
+    bool wordPattern(string pattern, string s) {
+        unordered_map<char, string> hashtable1;
+        unordered_map<string, char> hashtable2;
+        int n = pattern.size() , j=0;
+        for(int i=0 ; i < n ; i++){
+            string temp;
+            while(s[j] != ' '  && j<s.size()) temp.push_back(s[j++]);
+            if(i<n-1 &&j == s.size()) return false;  //如果i还没到n-1但是j已经到头了说明字符串数目少了
+            ++j;//跳过空格
+
+            //判断pattern的一个字符是否对应多个string串的情况
+            if( hashtable1.find(pattern[i]) != hashtable1.end() ){  //find下标 ,原本patter[i]对应的hash表已经有对应的串了
+                if(hashtable1[pattern[i]] != temp ) return false; //如果原本存放的对应的串和现在的新串不一样，则错误
+            }  //判断pattern的一个字符是否对应多个string串的情况
+            else 
+                hashtable1[pattern[i]] = temp;
+
+           // 判断多个pattern字符对应一个string串的情况
+            if( hashtable2.find(temp) != hashtable2.end() ){  //find下标
+                if(hashtable2[temp] != pattern[i] ) return false; 
+            }  
+            else 
+                hashtable2[temp] = pattern[i];
+        }
+        if(j < s.size()) return false;//如果j还没到头，也错误
+        return true;
+    }
+};
