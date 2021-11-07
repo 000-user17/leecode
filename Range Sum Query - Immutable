@@ -1,0 +1,22 @@
+class NumArray {
+    /*思路，创造一个sum数组来计算nums各位的和
+    NumArray进行初始化，我们要活得nums的信息，只能创造一个全局变量，来船速sumRange当中*/
+public:
+    vector<int> sum;
+    NumArray(vector<int>& nums) {
+        int n=nums.size();
+        sum.resize(n+1);
+        for(int i=0; i<n; i++){
+            sum[i+1] = nums[i] + sum[i]; //sum[i]中存放的时数组nums从0到i-1的和 
+        }
+    }
+    int sumRange(int left, int right) {
+       return sum[right+1] - sum[left];
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * int param_1 = obj->sumRange(left,right);
+ */
