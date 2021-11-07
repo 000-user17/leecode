@@ -1,0 +1,30 @@
+class Solution {
+    /*思路：不难发现要实现On时间复杂度，只能进行一次循环
+    并且循环内运算要是常数级别的
+    所以我发现对于2的x次幂的数一定只有一个1，而如果一个数小于2的x+1次幂，假设为2的x次幂+k
+    其1的个数一定可以用1加上之前ans数组中已经记录的ans[k]的1的个数，但是如何判断i时2的次幂
+    就引入temp，因为本来计算k就需要知道2的x次放，因此直接判断i是否等于temp*2即可一次得到i=2的n次幂的情况
+    加上初始条件ans0=0，并且temp从1开始，即i从1开始*/
+public:
+    vector<int> countBits(int n) {
+        vector<int> ans(n+1);
+        int temp=1;
+        for(int i=1 ; i<=n ; i++){
+            if(i == temp*2) {
+                ans[i] = 1;
+                temp = i;
+            }
+            ans[i] = ans[i-temp] + 1;
+        }
+        return ans;
+    }
+};
+
+ /*for(int i=0 ; i<=n ; i++){
+            int temp=i;
+            while(temp>0){
+                if(temp & 1) ans[i]++;
+                temp>>=1;
+            }
+        }
+        return ans;*/
