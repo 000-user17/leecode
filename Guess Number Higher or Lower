@@ -1,0 +1,24 @@
+/** 
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is lower than the guess number
+ *			      1 if num is higher than the guess number
+ *               otherwise return 0
+ * int guess(int num);
+ */
+/*二分法，注意越界*/
+class Solution {
+public:
+    int guessNumber(int n) {
+        int low=1, high = n;
+        while(low<high){
+            int med = ((long)low+high)/2;
+            //int mid = left + (right - left) / 2; // 防止计算时溢出，可以证明其与上式一样
+            //如果约了小数部分，那么被除数一定是奇数，即奇数与偶数的运算，无论加减都会约去小鼠部分
+            if(guess(med) == 1) low = med+1;  //这边一定要==1.否则会计算错误
+            else if(guess(med) == -1) high = med;
+            else if(guess(med) == 0) return med;
+        }
+        return low; //low=high时，只可能时low或high
+    }
+};
