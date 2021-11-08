@@ -1,0 +1,22 @@
+class Solution {
+    /*time O(m+n) space O(min(m,n))
+    思路：利用map性质，先遍历一个数组将其每个元素的个数储存进来
+    再次遍历第二个数组，如果在hashtable中找到了，则将其元素个数--，并且放入到结果ans中*/
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        if(nums1.size() > nums2.size())
+            return intersect(nums2 , nums1); //这样可以把较少的一个数组存入hashtable中，优化space
+        unordered_map<int,int> hashtable;
+        vector<int> ans;
+        for(int i=0 ; i<nums1.size() ; i++){
+            hashtable[nums1[i]]++;
+        }
+        for(int i=0 ; i<nums2.size() ; i++){
+            if(hashtable.find(nums2[i]) != hashtable.end() && hashtable[nums2[i]]){
+                ans.push_back(nums2[i]);
+                hashtable[nums2[i]]--;
+            }
+        }
+        return ans;
+    }
+};
