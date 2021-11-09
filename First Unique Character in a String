@@ -1,0 +1,14 @@
+class Solution {
+    /*思路：哈希表，利用map映射创建哈希表，遍历一次s，之后再次遍历s，找到出现次数为1便立即返回，都没找到则返回-1*/
+public:
+    int firstUniqChar(string s) {
+        unordered_map<char,int> hashtable;
+        for(char iter : s){
+            hashtable[iter]++;
+        }
+        for(int i=0 ; i<s.size() ; i++){
+            if(hashtable[s[i]] == 1) return i;
+        }
+        return -1;
+    }
+};
