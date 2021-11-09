@@ -1,0 +1,17 @@
+class Solution {
+    /*set相当于一个集合，不想map是一个映射可以实现自动排序。
+    unordered_set是打乱顺序的，数据插入和查找的时间复杂度很低，几乎是常数时间，而代价是消耗比较多的内存*/
+public:
+    char findTheDifference(string s, string t) {
+        unordered_map<char,int>hashtable;
+        for(char kk : s){
+            hashtable[kk]++;
+        }
+        for(char kk : t){
+            if(hashtable.find(kk) == hashtable.end()) return kk;
+            if(--hashtable[kk] == -1) return kk;
+           // if(--hashtable[kk] == 1) qq.emplace(kk,hashtable[kk]);  //emplace比push效率更高，优化了
+        }
+        return ' ';
+    }
+};
