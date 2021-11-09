@@ -1,6 +1,6 @@
 class NumArray {
     /*思路，创造一个sum数组来计算nums各位的和
-    NumArray进行初始化，我们要活得nums的信息，只能创造一个全局变量，来船速sumRange当中*/
+    NumArray进行初始化，我们要活得nums的信息，只能创造一个全局变量sum，通过sum来存储从0到i的数组nums的和*/
 public:
     vector<int> sum;
     NumArray(vector<int>& nums) {
