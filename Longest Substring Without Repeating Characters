@@ -1,0 +1,55 @@
+class Solution {
+     /* 思路1：利用一个哈希表来记录每第一次遇到字母的下标，如果已经遇到过了，说明之前的哈希表中存储了之前遇到字母的位置
+    那么我们就应该从之前遇到的相同字母的下一个位置开始重新找，这样才可以避免重复
+    要达到这个目的，必须使用计数最大不重复长度count和新开始找最大不重复子串的长度位置start
+    最后，开始找的时候，要把哈希表在start到重复字母位置处的节点删除，也要用到一个for循环*/
+
+    /*思路2，即下面的官方题解，滑动数组*/
+public:
+    int lengthOfLongestSubstring(string s) {
+    unordered_set<char> hashset;
+    int maxl=0, n = s.size();
+    int right=-1;
+    for(int left=0 ; left<n ; left++){
+        if(left!=0) hashset.erase(s[left-1]);
+        while(right+1<n && !hashset.count(s[right+1])){
+            hashset.insert(s[right+1]);
+            ++right;
+        }
+        maxl = max(maxl , right-left+1);
+    }
+    return maxl;
+    }
+};
+
+ /*unordered_map<char,int>hashtable;
+       int maxl=0 , count=0;
+       int start=0,j; //从哪里新的开始计数一个
+       for(int i=0 ; i<s.size() ; i++){
+           if( hashtable.find(s[i]) != hashtable.end() ){
+               maxl = max(maxl,count);
+               count = count-(hashtable[s[i]] +1- start);
+               for(j=start ; j<=hashtable[s[i]] ; j++){
+                   hashtable.erase(s[j]);
+               }
+               start = j;
+            }
+               ++count;
+               hashtable[s[i]] = i;
+       }
+       return max(count,maxl);*/
+
+//以下是错误解法，忽略了发现重复后要从哪里开始继续，但是帮助熟悉了set用法
+ /* unordered_set<char> sett;
+        int maxl=0, count=0; 
+        for(char kk : s){
+            if(sett.count(kk)) {//如果在遍历中发现kk已经在集合中，则清空sett和count=0推出本次执行,count(kk)表示看集合中有几个kk
+                maxl = max(maxl,count);//要用max内置函数，变量赋值不能为max ，maxl为当前最长不重复字符串和以前的maxl的最大值
+                count=0;  
+                sett.clear();
+            }
+               //如果没发现重复，将kk放入sett，并且字符串个数+1
+                ++count;
+                sett.insert(kk);
+        }
+        return max(maxl,count);*/
