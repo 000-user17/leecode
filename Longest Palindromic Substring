@@ -1,0 +1,58 @@
+class Solution {
+    /*思路2：中心扩散法，从s[0]个字符开始寻找，从每个字符的两边开始扩散
+    如果时奇数的回文字符串，那么直接从中心的那个元素开始向两边扩散，添加边界条件，以及更新maxl
+    如果遇到了偶数的回文字符串，那么要判断与s[i]右边相邻的字符串是否与s[i]相等，相等则跳过，直到不相等为止
+    不相等时再与s[i]的左边字符比较，即又变成了奇数个回文字符串的情况*/
+public:
+    string longestPalindrome(string s) {
+        int n = s.size(), maxl=1;
+        if(n<2) return s;
+        int temp;
+        int begin=0;
+        for(int i=0 ; i<n ; i++){
+            int left=i-1,right=i+1;     //设置左扩散指针和右扩散指针
+            while(s[i] == s[right] && right<n) right++;  //如果s[i]和right指向的字符相等，则跳过
+            while(left>=0 && right<n){  //边界
+                if(s[left] == s[right]) {  //左右字符相等
+                    left--; right++;
+                    temp = begin;
+                }
+                else break;
+            }
+            if(right-left-1 > maxl){  //更新maxl，找到初始位置
+                begin = left+1;
+                maxl = right-left-1;
+            }
+        }
+        return s.substr(begin,maxl); //从s的begin位置开始，包括begin，返回maxl个字符组成的串
+    }
+};
+
+/*动态规划解法
+使用dp数组记录字符串i到j位置是否为1，为1则说明是回文字符串，否则不是
+并从len=2，即长度为2的字符串开始判断起
+len=1时dp数组初始化为1，即一个字符为一个回文串
+int n = s.size() , maxl = 1;
+    if(n<2) return s;
+    int dp[n][n];
+    int begin=0;
+    for(int i=0 ; i<n ;i++){
+        dp[i][i] = 1;
+    }//初始化
+    for(int len=2 ; len<=n ; len++){ //len代表字符串的长度，而不是位置，所以能够取到n，代表所有整个s是回文串
+        for(int i=0 ; i<n ; i++){
+            int j = len+i-1;
+            if(j >= n) break; //如果j超过了s的范围，直接退出循环
+            if(s[j] != s[i]) dp[i][j] = 0;
+            else{
+                if(len == 2) dp[i][j]=1;
+                else dp[i][j] = dp[i+1][j-1];
+            }
+            if(dp[i][j] && len>maxl){
+                maxl = len;
+                begin = i;
+            }
+        }
+    }
+    return s.substr(begin,maxl); //截取s从begin位置开始的maxl个字符,包括begin位置的字符
+    */
