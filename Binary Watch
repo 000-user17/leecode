@@ -1,0 +1,17 @@
+class Solution {
+    /*新题型，思路，将二进制表能表示范围的所有数字枚举出来，看其h和m的二进制为1的个数是否与turnedOn相等
+    因为二进制表中小时和分钟所对应的数字刚好如果为1就代表打开，而其数值也恰好等于表上的数字*/
+public:
+//新内置函数__builtin_popcount(x),前面时两条下线，中间一条，用于计算x二进制表示中的1的个数
+    vector<string> readBinaryWatch(int turnedOn) {
+        vector<string> ans;
+        for(int h=0 ; h<12 ; ++h){
+            for(int m=0 ; m<60 ; m++){
+                if(__builtin_popcount(h) + __builtin_popcount(m) == turnedOn){
+                    ans.push_back(to_string(h) + ":" + (m<10?"0":"") + to_string(m));
+                }
+            }
+        }
+        return ans;
+    }
+};
