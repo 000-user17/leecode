@@ -1,0 +1,57 @@
+class Solution {
+    //sort(a,a+len,greater<int>());//内置类型的由大到小排序
+    /*前三大一脉相传法*/
+public:
+    int thirdMax(vector<int>& nums) {
+        int n=nums.size();
+        long min1=LONG_MIN, min2=LONG_MIN, min3=LONG_MIN;
+        //必须是long和LONG_MING，否则首先是if比较相减减正数可能会溢出
+        //其次是如果遇到了INT_MIN可能会判断失效，因为如果对第三个else if而言
+        //如果最后用min3==INT_MIN判断，导致以为min3没有变，而返回失效
+        for(int i=0 ; i<n ; i++){
+            if(nums[i]>min1){
+                min3=min2;  //顺序不能改变
+                min2=min1;
+                min1 = nums[i];
+            }
+            else if(nums[i] > min2 && nums[i]<min1){
+                min3=min2;
+                min2 = nums[i];
+            }
+            else if(nums[i]>min3 && nums[i]<min2){
+                min3 = nums[i];
+            }
+        }
+    return min3==LONG_MIN?min1:min3;
+    }
+};
+
+/*集合set自动排序以及相同元素只有一个法
+class Solution {
+public:
+    int thirdMax(vector<int> &nums) {
+        set<int> s;
+        for (int num : nums) {
+            s.insert(num);
+            if (s.size() > 3) {
+                s.erase(s.begin());
+            }
+        }
+        return s.size() == 3 ? *s.begin() : *s.rbegin();
+    }
+};
+
+/*暴力排序法
+int n=nums.size();
+        if(n==1) return nums[0];
+        if(n==2) return max(nums[0],nums[1]);
+        sort(nums.begin() , nums.end());
+        int i=n-1,count=0;
+        while(i>0){
+            if(nums[i-1] < nums[i]) count++;
+            if(count==2) break;
+            i--;
+        }
+        if(count==2)
+            return nums[i-1];
+        else return nums[n-1];*/
