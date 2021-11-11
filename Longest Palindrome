@@ -1,0 +1,23 @@
+class Solution {
+    /*set中set.count(x)返回值只能是0或1，因为元素中只能有一个独立的元素，假设insert多个x还是返回1，没有为0
+    思路：利用哈希映射，存放每个字符出现的次数，如果出现次数大于等于2，则将次数除以2再乘以2来得到不超过该次数的最大偶数
+    因为回文串只可能是奇数或偶数，所以如果先求得回文串里面的可以偶数字符个数后，再看是否已经等于整个s字符串的长度
+    如果不等于说明还有奇数的字符可以加进来，即+1，否则等于初始字符串长度s.size()*/
+public:
+    int longestPalindrome(string s) {
+        int n = s.size();
+        int count=0;
+        unordered_map<char,int> hashtable;
+        for(int i=0 ; i<n ; i++){
+            hashtable[s[i]]++;
+        }
+        for(auto [name,fre] : hashtable){//以该方式遍历hashtable的时候，[name,fre]name和fre不能为空，都要有，否则报错
+        //以auto iter:hashtable 访问的时候，可以iter.second访问值
+        //auto iter=hashtable.begin() ; iter!=hashtabe.end() ; iter++访问时，iter->second访问值
+            if(fre/2 != 0){
+                count= count + fre/2*2;
+            }
+        }
+        return count + (count<n);
+    }
+};
