@@ -1,0 +1,31 @@
+class Solution {
+public:
+/*思路： 原地利用nums作为哈希表，如果将nums中nums[i]-1位置对应的元素+n
+如果下次遍历的时候有一个位置的元素没有超过n，则说明该位置没加，即i+1处元素缺失*/
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        vector<int> ans;
+        int n = nums.size();
+        for(int i=0 ; i<n ; i++){
+            int x = (nums[i]-1)%n;//同一个位置如果加了多次n，那么要mod n，才能使下标不越界，加同一个位置
+            nums[x]+=n;
+        }
+        for(int i=0 ; i<n ;i++){
+            if(nums[i]<=n) ans.emplace_back(i+1);
+        }
+        return ans;
+    }
+};
+
+
+
+/*思路利用set集合来保存nums中元素，再次遍历1到n看是否set集合是否有，没有则添加到元素ans里*/
+   /* vector<int> findDisappearedNumbers(vector<int>& nums) {
+        unordered_set<int> sett;  //auto iter = sett.begin() ,sett的元素为*iter
+        vector<int> ans;
+        int n=nums.size();
+        for(int i=0 ; i<n ;i++) sett.insert(nums[i]);
+        for(int i=1 ; i<=n ; i++){
+            if(sett.count(i) == 0)
+                ans.emplace_back(i);
+        }
+        return ans;*/
