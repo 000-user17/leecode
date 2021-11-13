@@ -1,0 +1,100 @@
+class Automation{
+    /*利用自动机，增加一个类*/
+    string state = "start";
+    unordered_map<string,vector<string>> table={ //这里不能用vector，因为vector定义不能有vector<m,n>
+    {"start",{"start","number","sign","end"}},
+    {"sign",{"end","number","end","end"}},
+    {"number",{"end","number","end","end"}},
+    {"end",{"end","end","end","end"}}
+    };  
+    int getcol(char c){
+        if(c == ' ') return 0;
+        if(isdigit(c)) return 1;//判断是否是数字
+        if(c == '+' || c=='-') return 2;
+        else return 3;
+    }
+    /*上面这一段放在public下面也行，但是貌似执行时间会增加*/
+public:
+    long long ans=0;
+    int sign=1;
+    void cal(char c){
+        state = table[state][getcol(c)];
+        if(state == "number"){
+            ans = ans*10 + c -'0';
+            ans = sign == -1? min(ans,-(long long)INT_MIN): min(ans,(long long)INT_MAX);
+            //全部转化为正数,看是否越界
+            //还有需要注意 : 左右必须要和ans是一样的类型,也就是必须强制转化为long long，否则会报错
+            
+        }
+        if(state == "sign"){
+            if(c == '-') sign=-1;
+        }
+        //其余状态不对ans=0做改动
+    }
+};
+
+class Solution {
+public:
+    int myAtoi(string s) {
+        Automation automation;
+        for(char c : s){
+            automation.cal(c);
+        }
+        return automation.ans * automation.sign;
+    }
+};
+
+    /*atoi转化为数字atoi('132') = 132
+    冗余代码*/
+        /*double ans=0;
+        int n = s.size(), i=0;
+        bool minus=false, firstzeros=false;
+        while(s[i] == ' ') {
+            i++; //消除空格
+        }
+        if(s[i] == '-'){
+            minus = true;
+            i++;
+            if(s[i]=='+'|| s[i] == '-') return 0; //再次判断是否还有正负号
+            }  //判断是否有负号
+        if(s[i] == '+'){
+            i++;
+            if(s[i]=='+'|| s[i] == '-') return 0;
+            }  //判断是否有正号
+        if(i == n) return 0;
+        if((s[i] >= 97 && s[i]<=122) || s[i]=='.') return 0; //如果第一个不是数字，返回0
+        while(s[i]=='0'){ //消除前导零
+            i++;
+            firstzeros = true;
+        }
+        if(i==n) return 0;
+        //开始找到数字了
+        string temp;                  //记录数字
+        if(s[i] == '-'){
+            if(firstzeros) return 0;
+            minus = true;
+            i++;
+            if(s[i]=='+'|| s[i] == '-') return 0; //再次判断是否还有正负号
+            }  //判断是否有负号
+        if(s[i] == '+'){
+            if(firstzeros) return 0;
+            i++;
+            if(s[i]=='+'|| s[i] == '-') return 0;
+            }  //判断是否有正号
+        while(i<n && s[i]>=48 && s[i] <= 57){
+            temp.push_back(s[i++]);    //暂存数字
+        }
+        int m = temp.size();
+        if(m == 0) return 0;
+        reverse(temp.begin() , temp.end());
+        double count=1;
+        for(i=0 ; i<m ;i++){
+            double a = temp[i]-48;  //字符转化为int
+            a*=count;  //加各位数字
+            ans+=a;
+            count*=10;
+        }
+        if(minus) ans=-1*ans;
+        if(ans < INT_MIN) ans = INT_MIN;
+        if(ans > INT_MAX) ans = INT_MAX;
+        return ans; */
