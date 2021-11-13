@@ -1,0 +1,18 @@
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        /*枚举法，类似周期性质*/
+        int n=s.size();
+        if(n==1) return false;
+        for(int i=1 ; i<=n/2 ; i++){
+            if(n%i==0){
+                int match = true;
+                for(int j=i ; j<n ; j++){
+                    if(s[j] != s[j-i]) match =false;
+                }
+                if(match == true) return true;
+            }
+        }
+        return false;
+    }
+};
