@@ -1,0 +1,51 @@
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        /*思路3：在思路2的情况下简化,类似双指针法
+        time O(mlogm+nlogn) spase O(mlogm+nlogn)*/
+        int count=0, n = g.size(), m  = s.size();
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        for(int i=0,j=0 ; i<g.size()&&j<s.size() ; i++,j++){
+            while(j<s.size() && g[i] > s[j]) j++;
+            if(j<s.size()) ++count;
+        }
+        return count;
+    }
+};
+  /*思路2，先对g和s排序，然后将两个数组相减，并且cookie对应的数列依次前移，看每次相减之后大于0的最大值
+        即满足的最大值  */
+      /*  int count=0, maxcur=0;
+        int n = g.size() , m = s.size();
+        sort(g.begin() , g.end());
+        sort(s.begin() , s.end());
+        int k=0;
+        while(k<m){
+            for(int i=0 ; i<m-k && i<n ; i++){
+                if(s[i+k] - g[i] >= 0) count++;
+            }
+            maxcur = max(count,maxcur);
+            k++;
+            count=0;
+        }
+        return maxcur; 
+        */
+
+ /*思路1：利用哈希映射把cookie的信息存入哈希表，然后再遍历g[i]，并再遍历哈希表看是否有满足的cookie，
+        有的话数量减一并且推出循环*/
+    /*    map<int,int> hashtable;
+        int n = g.size() , m = s.size(), count=0;
+        for(int i=0 ; i<m ; i++){
+           hashtable[s[i]]++; 
+        }
+        for(int i=0 ; i<n ; i++){
+            for(auto &[cookie,num] : hashtable){ //利用哈希映射解决，必须加&，因为这样才能改变hashtable中的值
+                if(g[i] <= cookie && num>0) {    
+                    num--;
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+        */
