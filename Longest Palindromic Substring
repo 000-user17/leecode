@@ -35,6 +35,9 @@ len=1时dp数组初始化为1，即一个字符为一个回文串
 int n = s.size() , maxl = 1;
     if(n<2) return s;
     int dp[n][n];
+
+vector<vector<int>> dp(n, vector<int>(n));  //也可以这样定义二维数组
+
     int begin=0;
     for(int i=0 ; i<n ;i++){
         dp[i][i] = 1;
