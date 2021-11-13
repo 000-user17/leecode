@@ -1,0 +1,21 @@
+class Solution {
+    /*思路，没n-1个数加1相当于1个数减一，最终减到与最小值相等即可
+    脑经急转弯*/
+public:
+    /*int findmin(vector<int> nums){
+        int n = nums.size(), mincur=nums[0];
+        for(int i=1 ; i<n ; i++){
+            if(nums[i] < mincur){
+                mincur = nums[i];
+            }
+        }
+        return mincur;
+    }*/
+    int minMoves(vector<int>& nums) {
+        int min = *min_element(nums.begin(),nums.end()),count=0;  //min_elemetn()返回容器最小值的指针
+        for(int num : nums){
+            count+=(num-min);
+        }
+        return count;
+    }
+};
