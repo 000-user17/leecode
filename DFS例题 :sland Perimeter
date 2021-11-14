@@ -1,0 +1,97 @@
+class Solution {
+    constexpr static int dpx[4] = {1,0,-1,0};
+    constexpr static int dpy[4] = {0,1,0,-1};
+    //不加constexpr不能，因为static变量不能初始化，要在成员函数里面初始化
+public:
+//我想如果事先计算出m和n就不用每次循环重复的去套size()函数计算，节省时间,并且节省写代码的时间
+    int dfs(vector<vector<int>>& grid,int i, int j, int m, int n){
+        if(i<0 || j<0 || i>=m || j>=n || grid[i][j] == 0){
+            return 1;  
+            //第一个边界条件，如果dfs到了边界，或是水块，周长加1
+            //这里因为遇到水块直接返回了，所以水块不会赋值2，因此水块可以重复使用
+        }
+        //可以发现，如果grid[i][j]是1的话，进行dfs，并且当且仅当遇到边界和水块，才+1
+        //这说明实质的周长取决于水块和边界，dfs就是要找到这两者然后+1
+        if(grid[i][j] == 2){
+            return 0; 
+            //第二个边界条件，如果dfs走过了之前走的陆地块，则不加周长，防止无限递归
+        }
+        grid[i][j] = 2;//更改陆地值防止重复递归
+        int col=0;
+        for(int k=0 ; k<4; k++){ //从陆地grid[i][j]出发，dfs遍历周围所有其它块的周长
+            col+=dfs(grid,i+dpx[k],j+dpy[k],m,n);
+        }
+        //可以发现，如果grid[i][j]是1的话，进行dfs，并且当且仅当遇到边界和水块，才+1
+        //这说明实质的周长取决于水块和边界，dfs就是要找到这两者然后+1
+        //也可以理解为从陆地块开始寻找其上方的周长，左边的周长，右边的周长和下方的周长
+        return col;
+    }
+    int islandPerimeter(vector<vector<int>>& grid){
+        int ans=0, m = grid.size(), n= grid[0].size();
+        for(int i=0 ; i<m; i++){
+            for(int j=0 ; j<n ; j++){   //因为所有的陆地都是连接的，所以找到一个块dfs就可以算完所有的陆地周长
+            //但是要先找到一个陆地块，这就需要遍历所有的块来确保
+                if(grid[i][j] == 1){
+                    ans+=dfs(grid,i,j,m,n);
+                    return ans;   //遇到了依次就可以直接返回，因为所有陆地块都是连着的
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+
+//dfs利用递归进行问题的解决，从1个方块进去，判断边界条件，然后递归的判断其周围四个格子
+    /*void dfs(vector<vector<int>> &grid, int i, int j, int &ans ){
+        if(i<0 || i>=grid.size() || j<0 || j>=grid[0].size())
+        return ;
+        if(grid[i][j] >= 2 ) return ;
+        if(grid[i][j] == 1 ){
+            if(i-1 < 0) ans++;  //判断是否与边界外的水相连
+            else if(grid[i-1][j] == 0 || grid[i-1][j]==2) ans++;
+            if(i+1 >= grid.size()) ans++;
+            else if(grid[i+1][j]==0 || grid[i+1][j]==2) ans++;
+            if(j-1 < 0) ans++;
+            else if(grid[i][j-1] == 0 || grid[i][j-1]==2) ans++;
+            if(j+1 >= grid[i].size()) ans++;
+            else if(grid[i][j+1] == 0 || grid[i][j+1] == 2) ans++;
+            }
+        if(grid[i][j] == 0)
+            grid[i][j]=2;
+        if(grid[i][j] == 1)
+            grid[i][j] = 3;  //不能全部grid[i][j]=2,因为这样会导致水块无法重复进行运算
+                             //也不能只对陆地块进行grid[i][j]=2,因为会导致上下两个谁快无限来回递归
+                             //为了重复计算水块，只能分开赋值，再判断条件处把重复的水块值2也纳入判断
+        dfs(grid,i-1,j,ans);
+        dfs(grid,i+1,j,ans);
+        dfs(grid,i,j-1,ans);
+        dfs(grid,i,j+1,ans);
+    }
+    int islandPerimeter(vector<vector<int>>& grid) {
+        int ans=0;
+        dfs(grid,0,0,ans);
+        return ans;
+    }
+};*/
+
+
+/*判断是否超过界限，以及与多少个水相邻，与水或边界相邻则+1*/
+ /*       int ans=0;
+        for(int i=0 ; i< grid.size() ; i++){
+            for(int j=0 ; j<grid[i].size() ; j++){
+                int c=0;
+                if(grid[i][j] == 1 ){
+                    if(i-1 < 0) c++;  //判断是否与边界外的水相连
+                    else if(grid[i-1][j] == 0) c++;
+                    if(i+1 >= grid.size()) c++;
+                    else if(grid[i+1][j]==0) c++;
+                    if(j-1 < 0) c++;
+                    else if(grid[i][j-1] == 0) c++;
+                    if(j+1 >= grid[i].size()) c++;
+                    else if(grid[i][j+1] == 0) c++;
+                }
+                ans+=c;
+            }
+        }
+        return ans;*/
