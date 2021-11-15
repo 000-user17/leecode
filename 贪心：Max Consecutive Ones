@@ -1,0 +1,17 @@
+class Solution {
+    /*一次遍历，贪心算法，找最大的连续1然后储存在maxcur里，如果下次的超过则maxcur替换为新的
+    最后查完要再比一次，因为解为可能没0，就没更新maxcur*/
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+        int maxcur=0,n = nums.size(), count=0;
+        for(int i=0 ; i<n ; i++){
+            if(nums[i] == 1) count++;
+            else{
+                maxcur = max(maxcur, count);
+                count=0;
+            }
+        }
+        maxcur = max(maxcur,count);
+        return maxcur;
+    }
+};
