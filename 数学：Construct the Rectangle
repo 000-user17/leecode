@@ -1,0 +1,12 @@
+class Solution {
+public:
+    vector<int> constructRectangle(int area) {
+        /*time space O(根号n)*/
+        int M = sqrt(area); //先看是否能开方,可由二分法实现O1时间复杂度
+        while(area % M != 0){ //如果不能开方，则M不能等于L，此时就减M，看是否可以整除M
+            M-=1;
+        } 
+        int L = area/M;  //能整除则找到了最小的L-M
+        return {L,M};
+    }
+};
