@@ -1,0 +1,27 @@
+class Solution {
+public:
+/*思路，如果一个数k有约数x，则k一定有约数k/x，因为从1开始开灯，所以一个数一定有约数1和它本身k
+因此可以推导出任意数k，如果k=x^2，则一定有奇数个约数，否则有偶数个约数
+当约数为奇数个时，便说明灯泡亮。根号k向下取整代表k大于从1到根号k的平方数，即所包含的平方数个数*/
+    int bulbSwitch(int n) {
+        return sqrt(n);
+    }
+};
+
+
+
+/*思路，数组储存灯泡开关状态，根据轮次双循环^1改变灯泡状态
+    int bulbSwitch(int n) {
+        vector<int> bulb(n+1);
+        int ans=0;
+        for(int i=1 ; i<=n ; i++){ //n轮
+            for(int j=1 ; j<=n ;j++){ //n个灯泡
+                if(i*j > n) break; //超过n直接退出，节省时间
+                bulb[i*j]^=1;
+            }
+        }
+        for(int i=1 ; i<=n ; i++){
+            if(bulb[i] == 1) ans++;
+        }
+        return ans;
+    }*/
