@@ -1,0 +1,48 @@
+class Solution {
+    /*思路，将罗马数组放到map映射里，根据不同的数位选择table里的符号放入结果string ans
+    注意要从后面的数位往前放*/
+public:
+    unordered_map<int, vector<char>> table = {
+        {0,{'I','V'}},
+        {1,{'X','L'}},
+        {2,{'C','D'}},
+        {3,{'M'}}
+        };//注意括号一定不能少
+    string intToRoman(int num) {
+        string ans;
+        int index=0; //数位索引
+        vector<int> digit(4); //记录数位值
+        while(num) {
+            digit[index] = num%10;
+            num/=10;
+            index++;
+        }
+        while(--index>=0){
+            char temp = digit[index]+48;
+            if(temp == '4') {
+                ans.push_back(table[index][0]);
+                ans.push_back(table[index][1]); 
+            }
+            if(temp == '9') {
+                ans.push_back(table[index][0]);
+                ans.push_back(table[index+1][0]);//因为最大的千位数是3，所以不用考虑数组越界
+            }
+            else
+            {
+                if(temp >='5') ans.push_back(table[index][1]);//先判断temp是否大于5，加一个'V'
+                while(temp>'5' && temp--<='9') ans.push_back(table[index][0]);
+                while(temp-- < '4' && temp >= '0') ans.push_back(table[index][0]);
+            }
+       }
+        
+        return ans;
+    }
+};
+
+/*class Solution:
+    def intToRoman(self, num: int) -> str:
+        M = ["", "M", "MM", "MMM"] # 1000，2000，3000
+        C = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"] # 100~900
+        X = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"] # 10~90
+        I = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"] # 1~9
+        return M[num//1000] + C[(num%1000)//100] + X[(num%100)//10] + I[num%10]*/
