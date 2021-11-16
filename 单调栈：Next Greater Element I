@@ -1,0 +1,66 @@
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        /*time O(m+n)  space O(m)
+        单调栈法： 维护一个栈，从后往前遍历数组nums2，如果栈非空并且当前nums2[i]不大于nums2[i]
+        则栈弹出栈顶元素，直到栈空或找到大于的元素，这样即寻找到了里nums2[i]最近的比它大的元素
+        之后让hashmapnums[i] = 该值，即哈希映射存储了离nums2[i]最近的比他大的元素，栈同时存储nums2[i]
+        再往前看，会遇到两种情况：
+        如果nums2[i-1]大于nums2[i],则其右大值应该还在往nums2[i]的栈下面找，并且之前出栈的元素不可能使右大值
+        如果nums2[i-1]小于nums2[i],则右大值就是nums2[i]*/
+        unordered_map<int,int> hashtable;
+        stack<int> st;
+        int n = nums1.size(), m = nums2.size();
+        for(int i=m-1 ; i>=0 ; i--){
+            while(!st.empty() && st.top()<=nums2[i]){
+                st.pop();
+            }
+            hashtable[nums2[i]] = st.empty()?-1:st.top();
+            st.emplace(nums2[i]);
+        }
+        for(int i=0 ; i<n ; i++){
+            nums1[i] = hashtable[nums1[i]];
+        }
+        return nums1;
+    }
+};
+
+/*思路1：利用哈希映射存储nums2各元素位置，在根据num1位置寻找的时候直接根据哈希映射的存储的位置开始进行寻找
+time  O(mn), space O(m) 
+unordered_map<int,int> hashtable;
+        vector<int> ans;
+        int n=nums1.size(), m = nums2.size();
+        for(int i=0 ; i<m ; i++){
+            hashtable[nums2[i]] = i;
+        }
+        for(int i=0 ; i<n ; i++){
+            int j=hashtable[nums1[i]]+1;
+            for (; j<m ; j++){
+                if(nums2[j]>nums1[i]){
+                    ans.emplace_back(nums2[j]);
+                    break;
+                }
+            }
+            if(j == m) ans.emplace_back(-1);
+        }
+        return ans;*/
+
+
+/*找到了下一个比其大的最小元素 min(max(nums2>nums1))
+map<int,int> hashtable;
+        vector<int> ans;
+        int n=nums1.size(), m = nums2.size();
+        for(int i=0 ; i<m ; i++){
+            hashtable[nums2[i]] = i;
+        }
+        for(int i=0 ; i<n ; i++){
+            auto iter = hashtable.find(nums1[i]);
+            for(; iter!=hashtable.end() ; iter++){
+                if(iter->first > nums1[i] && iter->second > hashtable[nums1[i]]){
+                    ans.emplace_back(iter->first);
+                    break;
+                }
+            }
+            if(iter == hashtable.end()) ans.emplace_back(-1);
+        }
+        return ans;*/
