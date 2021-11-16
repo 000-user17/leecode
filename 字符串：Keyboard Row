@@ -1,0 +1,44 @@
+class Solution {
+public:
+/*思路：通过字符串数组记录字母对应的键盘行数*/
+    vector<string> findWords(vector<string>& words) {
+        vector<string> ans;
+        string rowIdx = "12210111011122000010020202";
+        for(auto word : words){
+            bool flag = true;
+            char index = rowIdx[tolower(word[0])-'a'];  //tolower()将大写转化为小写字符串
+            for(int i=1 ; i<word.size() ; i++){
+                if(rowIdx[tolower(word[i])-'a'] != index){
+                    flag = false;
+                    break;
+                }
+            }
+              if(flag){
+                ans.emplace_back(word);
+            }
+        }
+        return ans;
+    }
+};
+
+
+//思路：利用哈希映射把各行键位做投射，然后搜索words里串的单词，看是否都在一行
+/*    unordered_map<char,int> table ={
+        {'q',1},{'w',1},{'e',1},{'r',1},{'t',1},{'y',1},{'u',1},{'i',1},{'o',1},{'p',1},
+        {'a',2},{'s',2},{'d',2},{'f',2},{'g',2},{'h',2},{'j',2},{'k',2},{'l',2},
+        {'z',3},{'x',3},{'c',3},{'v',3},{'b',3},{'n',3},{'m',3}
+    };
+    vector<string> findWords(vector<string>& words) {
+        vector<string> ans;
+        for(int i=0 ; i<words.size() ; i++){
+            int n = words[i].size()-1;
+            int index = table[words[i][n]<'a'?(words[i][n]+32):words[i][n]]; //统一为小写，但不改变words
+            while(n>=0){
+                if(table[words[i][n]<'a'?(words[i][n]+32):words[i][n]] != index)
+                    break;
+                n--;
+            }
+            if(n<0) ans.emplace_back(words[i]);
+        }
+        return ans;
+        */
