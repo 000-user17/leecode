@@ -1,0 +1,66 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:   
+    int base,maxcur,count;
+//感觉不定义全局变量消耗的时间和空间会少一些
+    void bala(int x, vector<int>& ans){
+        if(x == base) count++;  //如果等于base，则个数计数器+1
+        if(x != base) {
+            count=1;   //否则个数重新从1计数
+            base = x;  //并且当前的基准base换为x，看是否为x，是则count++
+        }
+        if(count == maxcur){    //如果等于当前的最大个数，则把其加入到ans中
+            ans.emplace_back(x);
+        } 
+        if(count>maxcur) {  //如果计数多余当前最大个数，ans重置为只有base
+            ans = vector<int> {base};  //新方法，重置ans数组
+            maxcur = count; //更新maxcur为最大的count
+        }
+    }
+    void helpdo(TreeNode* root,vector<int> &ans){
+        if(!root) return ;
+        helpdo(root->left,ans);   //这利用了中序遍历一个排序树输出有序序列的性质
+        bala(root->val,ans);
+        helpdo(root->right,ans);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        vector<int> ans;
+        helpdo(root,ans);
+        return ans;
+    }
+};
+
+
+//朴素法：通过哈希表记录每个元素的出现次数，最后把出现最多的push到结果中
+/* 
+void helpdo(TreeNode* root, unordered_map<int,int>& hashtable){
+        if(!root) return ;
+        ++hashtable[root->val];
+        helpdo(root->left,hashtable);
+        helpdo(root->right,hashtable);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        unordered_map<int , int> hashtable;
+        int count = 0;
+        vector<int> ans;
+        helpdo(root,hashtable);
+        for(auto iter : hashtable){
+            if(iter.second > count) count=iter.second;
+        }
+        for(auto iter : hashtable){
+            if(iter.second == count) ans.emplace_back(iter.first);
+        }
+        return ans;
+    }*/
