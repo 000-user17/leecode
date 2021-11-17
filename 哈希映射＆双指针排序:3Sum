@@ -1,0 +1,63 @@
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        /*思路，排序加双指针，首先对nums排序，这是为之后避免重复
+        定义三个指针，f,s,t.f指向第一重循环从nums[0]开始，要在s=f+1到t=nums.size-1当中
+        寻找到nums[s]+nums[t] = -nums[f]=target的另外两个指针s和t，由于数组排好序了，所以如果
+        nums[s]+nums[t]>target，则t应该向前，否则s应该向后，即用双指针来进行逼近target
+        为了避免重复，如果除了f=0,s=f+1,t=third,如果nums[f] = nums[f-1],nums[s] = num[s-1],nums[t] = nums[t+1]
+        都要移动f，s和t以保证其和之前的元素不同，这样才能保证最终的三元组不一样*/
+        sort(nums.begin(),nums.end());
+        int  n = nums.size();//++x要比x++运行速度快些
+        vector<vector<int>> ans;
+        for(int first = 0 ; first<n ; ++first){
+            if(first != 0 && nums[first] == nums[first-1] ) continue; //如果first指针指向的数和前一个数相同
+            int third=n-1 ;  //第三个指针，从后往前指向
+            int target = -nums[first]; //nums[second]和nums[third]的和加起来为target
+            for(int second = first+1 ; second<third ; second++){
+                if(second>first+1){
+                    while(nums[second] == nums[second-1] && second < third) ++second;
+                }
+                if(third < n-1){
+                    while(nums[third] == nums[third+1] && third > second) --third; 
+                }
+                while(nums[second]+nums[third]!=target && second<third){
+                    if(nums[second]+nums[third]>target && second<third) --third;
+                    if(nums[second]+nums[third]<target && second<third) ++second;
+                }
+                if(second != third){
+                ans.push_back({nums[first],nums[second],nums[third]});
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+
+/*思路：利用两个哈希映射，一个记录nums中数值最右边那个的索引（如果有重复）
+        另一个记录重复的三元组，利用两重循环，看-(nums[i] + nums[j])是否在第一个哈希表中
+        如果在，判断是否三者下标不同（第二重循环保证了i和j的不同，并且将三元组排序放入第二个哈希表
+        如果三元组不在第二个哈希表中，则存入
+        int n=nums.size();
+        vector<vector<int>> ans;
+        if(n<3) return {};
+        unordered_map<int,int> hashtable;
+        map<vector<int>,int> sett;  //这里必须为map不能unordered_map负责报错
+        for(int i=0 ; i<n ; i++){
+            hashtable[nums[i]]=i;
+        }
+        for(int i=0 ; i<n ; i++){
+            vector<int> temp(3);
+            for(int j=i+1 ; j<n ;j++){
+                int sum = -(nums[i] + nums[j]);
+                if( hashtable.find(sum)!= hashtable.end() && hashtable[sum] != i && hashtable[sum] != j ){
+                    temp={nums[i],nums[j],sum};
+                    sort(temp.begin(),temp.end());
+                    if(sett.find(temp) != sett.end()) continue;
+                    ans.push_back(temp); //这里不能用emplace_back，我想是因为数组的原因
+                    sett[temp]=1;
+                }
+            }
+        }
+        return ans;*/
