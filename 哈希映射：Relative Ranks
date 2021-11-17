@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<string> findRelativeRanks(vector<int>& score) {
+        //map，time O(n) , space O(n)
+        //节省了空间，利用map的自动排序性质，提前设好ans的大小，然后根据map排序的功能将ans对应的位置放入
+        //对应的排名
+        int n = score.size();
+        vector<string> ans;
+        ans.resize(n);  //提前设置好ans有多少个元素
+        map<int,int> hashtable;  //利用
+        for(int i=0 ; i<score.size() ; i++){
+            hashtable[score[i]] = i;
+        }
+        for(auto [num,index] : hashtable){
+            if(n==3) //最后三个元素了
+                ans[index] = "Bronze Medal"; 
+            else if(n==2) ans[index] = "Silver Medal";
+            else if(n==1) ans[index] = "Gold Medal";
+            else ans[index] = to_string(n); //前三名之后的元素
+            --n;
+        }
+          return ans;
+    }
+};
+
+ //朴素解法，time O(n) , space O(n)，通过哈希表记录排序后的位置，然后再遍历原始数组，看其在排序后的位置
+ /*       vector<string> ans;
+        unordered_map<int,int> hashtable;
+        vector<int> temp = score;
+        sort(score.begin(), score.end(),greater<int>());//加上后面那个就是从大到小排序
+        for(int i=0 ; i<score.size() ; i++){
+            hashtable[score[i]] = i;
+        }
+        for(int i=0 ; i<score.size() ; i++){
+            if(hashtable[temp[i]] == 2)
+                ans.emplace_back("Bronze Medal");
+            else if(hashtable[temp[i]] == 1)
+                ans.emplace_back("Silver Medal");
+            else if(hashtable[temp[i]] == 0)
+                ans.emplace_back("Gold Medal");
+            else
+                ans.emplace_back(to_string(hashtable[temp[i]]+1));
+        }
+          return ans;*/
