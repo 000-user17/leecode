@@ -1,0 +1,21 @@
+class Solution {
+public:
+    string convertToBase7(int num) {
+        /*思路：类似二进制，先取余，然后向右移一位，但是与二进制不同，这里是对7做运算*/
+        if(num == 0) return "0";
+        string ans;
+        bool negative = false;
+        if(num<0) {
+            negative = true;
+            num*=(-1);  //如果num不变为正数，那么负数除7取余之后可能会出错，如-7除7为-1，但要用1来表示，前面加负号
+        }
+        while(num){
+            char temp = num%7+48;
+            ans.push_back(temp);//string类型不能用emplace_back
+            num/=7;
+        }
+        if(negative) ans.push_back('-'); 
+        reverse(ans.begin() , ans.end());
+        return ans;
+    }
+};
