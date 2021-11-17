@@ -1,0 +1,93 @@
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        /*思路：双指针排序法，类似3sum，不过稍微改一下，要记录最短的差值d，以及最短d时的sum*/
+        int d = INT_MAX, n = nums.size(), ans; //d用来保存最接近的target的值,sum保存结果
+        sort(nums.begin(), nums.end());
+        for(int first = 0 ; first < n-2 ; first++){
+            if(first != 0 && nums[first] == nums[first-1]) continue;
+            int third = n-1;
+            for(int second = first+1 ; second < third ; ++second){ //这里不能对second++，
+//second要从上次的结束点继续前进，否则会导致跳过最优解，因为最下面的两个while语句
+//可能最后一个执行完了，sum>target了，并且third>second,此时就要移动third不能移动second
+
+                while(second > first+1 && second<third && nums[second] == nums[second-1]){
+                    ++second;
+                }
+                while(third<n-1 && second<third && nums[third] == nums[third+1]){
+                    --third;
+                }  //避免second和third指向与之前指向的相同值
+                int sum = nums[first] + nums[second] + nums[third];
+                while(sum != target && third>second){
+                    if(abs(target-sum) < d){
+                        d = abs(target -sum);
+                        ans = sum;
+                    }
+                    if(sum>target) --third;
+                    else if(sum<target) ++second; //和3sum稍微不同，因为要记录d
+                    sum = nums[first] + nums[second] + nums[third]; 
+                }
+                if(second != third && target == sum){
+                    return target; 
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+/*class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int d = INT_MAX, n = nums.size(), ans; //d用来保存最接近的target的值,sum保存结果
+        sort(nums.begin(), nums.end());
+        for(int first = 0 ; first < n-2 ; first++){
+            if(first != 0 && nums[first] == nums[first-1]) continue;
+            int third = n-1;
+            for(int second = first+1 ; second < third ; ){ //这里不能对second++，
+//second要从上次的结束点继续前进，否则会导致跳过最优解，因为最下面的两个while语句
+//可能最后一个执行完了，sum>target了，并且third>second,此时就要移动third不能移动second
+
+                while(second > first+1 && second<third && nums[second] == nums[second-1]){
+                    ++second;
+                }
+                while(third<n-1 && second<third && nums[third] == nums[third+1]){
+                    --third;
+                }  //避免second和third指向与之前指向的相同值
+
+                int sum = nums[first] + nums[second] + nums[third];
+
+                while(sum > target && second < third){
+                    if(target == sum) return target;
+                    if(abs(target - sum) < d){
+                        d = abs(target-sum);
+                        ans = sum;
+                    }
+                    --third;
+                    sum = nums[first] + nums[second] + nums[third];
+                }
+            //如果second = third-1值还是比target大，即到了second = third,则再增加second也没有意义了，只会更大 
+                    //所以返回当前最近的值
+                while(sum<target && second < third){
+                    if(target == sum) return target;
+                    if(abs(target - sum) < d){
+                        d = abs(target-sum);
+                        ans = sum;
+                    }
+                    ++second;
+                    sum = nums[first] + nums[second] + nums[third];       
+                }//如果到了second = third还是比target小，说明first指针要向前移动了，因此不管
+
+                if(second != third){
+                if(target == sum)
+                    return target; 
+                if(abs(target - sum) < d){
+                        d = abs(target-sum);
+                        ans = sum;
+                    }//如果最后又比target大了，就要比较并保存结果
+                }
+            }
+        }
+        return ans;
+    }
+};*/
