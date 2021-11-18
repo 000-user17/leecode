@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool checkPerfectNumber(int num) {
+        if(num == 1) return false;
+        int count = 2, sum=1;
+        while(true){
+            if(num % count == 0){
+                int vice = num/count; //约数count对应的另一个约数vice
+                if(vice == count){
+                    sum+=count;
+                    break;
+                } //平方数加一次,并且终止，因为之后就是重复的了
+                else if(vice < count) break; //如果直接小于count了，则也要开始重复了，直接推出
+                sum+=(count + vice);
+            }
+            ++count;
+        }
+        return sum == num;
+    }
+};
