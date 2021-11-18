@@ -1,0 +1,32 @@
+class Solution {
+public:
+//回溯
+//回溯其实就是暴力递归，寻找所有的可能性
+    int to_num(char ch){
+        return (int) ch-48;
+    }//字符转数字
+    void huisu(vector<string>& ans, vector<string>& table, string& combination, string digits, int index, int n, int turn){ //传入的参数结果ans，映射表table，暂存的的输入ans的字符串combination，数字串digits，
+    //digits中对应的数字下标index，index从0到digits.size()-1;digits的长度n；回溯中的轮数turn
+        if(turn == n) ans.push_back(combination); //已经到了digits字符个数的英文字符，放入结果
+        else{
+            for(char name : table[index-2]){//在某一轮turn中，要将digits[index]下数字映射的字符全部遍历完
+            //由于table表中对应digits下标index-2，即2映射table[0]，所以index-2
+                combination.push_back(name); //将当前遍历的字符push进暂存字符串
+                huisu(ans,table,combination,digits,to_num(digits[turn+1]), n, turn+1);
+                //进行回溯，到下一个数字映射的字符中进行push到combination中 
+                combination.pop_back();//如果将combination存入了ans，即要换另一个字符放入combination
+                //所以要pop出最近push入的字符
+            }
+        }
+    }
+
+    vector<string> letterCombinations(string digits) {
+        int n = digits.size();
+        vector<string> ans;
+        vector<string> table = {{"abc"},{"def"},{"ghi"},{"jkl"},{"mno"},{"pqrs"},{"tuv"},{"wxyz"}};
+        if(digits.empty()) return ans;
+        string combination;
+        huisu(ans, table, combination, digits,to_num(digits[0]), n, 0);
+        return ans; 
+    }
+};
