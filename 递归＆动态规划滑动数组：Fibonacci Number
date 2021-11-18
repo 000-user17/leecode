@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int fib(int n) {
+        /*动态规划滚动数组*/
+        if(n == 1)return 1;
+        if(n==0) return 0;
+        int p=0,q=1,r;
+        for(int i= 2 ; i<=n ; ++i){
+            r = p+q;
+            p = q;
+            q = r;
+        }
+        return r;
+    }
+};
+//return n<=1 ? n^0 : fib(n-1)+fib(n-2);
