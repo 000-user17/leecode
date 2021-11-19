@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        //类似三数之和，排序加双指针
+        int n = nums.size();
+        if(n<4) return {};
+        vector<vector<int>> ans;
+        sort(nums.begin(), nums.end());
+        for(int first=0 ; first<n-3 ; ++first){
+            if(first!=0 && nums[first] == nums[first-1]) continue;
+            for(int second = first+1; second<n-2 ; ++second){
+                if(second != first+1 && nums[second] == nums[second-1]) continue;
+                int fourth = n-1;
+                int sum = target - (nums[first]+nums[second]);//要找到的值
+                for(int third=second+1 ; third<fourth ; ++third){
+                    while(third != second+1 && nums[third] == nums[third-1] && third<fourth) ++third;
+                    while(fourth != n-1 && nums[fourth]==nums[fourth+1]&&third<fourth) --fourth;
+                    while(nums[third]+nums[fourth]!=sum && third<fourth){
+                        if(nums[third] + nums[fourth] < sum) ++third;
+                        else if(nums[third]+nums[fourth]>sum) --fourth;
+                    }
+                    if(third<fourth) 
+                        ans.push_back({nums[first],nums[second],nums[third],nums[fourth]});
+                }
+            }
+        }
+        return ans;
+    }
+};
