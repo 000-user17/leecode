@@ -1,0 +1,16 @@
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int count = 0, n = s.size();
+        int x = n/(2*k); //记录有多少个整数倍的2k区间
+        while(x--){  //将完整的2k区间进行反转
+            reverse(s.begin()+count*k,s.begin()+(count+1)*k);//反转s.begin()到s.begin()+k-1
+            count+=2;  
+        } 
+        if(n >= (count+1) * k+1) // 如果最后还剩下一个大于k的区间，则将其前k个反转
+            reverse(s.begin() + count*k, s.begin()+(count+1)*k);
+        else  //否则反转到最后
+            reverse(s.begin() + count*k , s.end());
+        return s;
+    }
+};
