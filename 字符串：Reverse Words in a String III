@@ -1,0 +1,14 @@
+class Solution {
+public:
+    string reverseWords(string s) {
+        int n = s.size(), k=0; //k记录单词的开始端
+        for(int i=0 ; i<n ; i++){
+            if(s[i] == ' '){  //找寻空格，将空格之前记录的一个单词反转
+                reverse(s.begin()+k, s.begin()+i);
+                k = i+1;
+            }
+        }
+        reverse(s.begin()+k, s.end());  //最后一个单词结尾无空格，for循环没涉及到，因此还要将最后一个单词反转
+        return s;
+    }
+};
