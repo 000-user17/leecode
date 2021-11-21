@@ -1,0 +1,26 @@
+class Solution {
+public:
+/*思路：回溯法*/
+    void huisu(vector<string> &ans, string& aa, int left, int right, int n){
+        if(aa.size() == 2*n) {
+            ans.push_back(aa);
+            return ;
+        }
+        if(left<n){//如果添加了n个左括号，则停止添加左括号
+            aa.push_back('(');
+            huisu(ans, aa, left+1 , right, n);
+            aa.pop_back();  //弹出一个左括号，添加右括号，再看后面的左右括号匹配情况
+        }
+        if(right<left){ //让当前右括号数目总是小于左括号数目
+            aa.push_back(')');
+            huisu(ans, aa, left, right+1, n);
+            aa.pop_back();
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        string temp;
+        huisu(ans,temp,0,0,n);
+        return ans;
+    }
+};
