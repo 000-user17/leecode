@@ -1,0 +1,65 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+//创建头节点,要注意firstNode->next = p 代表的是firstNode的指向的下一个结点是p，而不是firstNode->next这个指针原本
+//代表的指针指向p，要达到后者，需要fristNode = firstNode->next; firstNode = p;
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* p = head, *q = p?p->next:nullptr;
+        ListNode *firstNode= new ListNode(0,head);
+        ListNode *temp = firstNode;
+        while(q){
+            temp->next = q; //temp指向交换后的前面节点
+            p->next = q->next;   
+            q->next = p;     //上两句是交换两个相邻节点
+            temp = p;  //temp即交换后的后者
+            p = p->next;
+            q = p?p->next:nullptr;
+        }
+        return firstNode->next;
+    }
+};
+/*class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* temp = dummyHead;
+        while (temp->next != nullptr && temp->next->next != nullptr) {
+            ListNode* node1 = temp->next;
+            ListNode* node2 = temp->next->next;
+            temp->next = node2;
+            node1->next = node2->next;
+            node2->next = node1;
+            temp = node1;
+        }
+        return dummyHead->next;
+    }
+};*/
+
+/*不创建头节点的解法
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* p = head, *q = p?p->next:nullptr, *temp;
+        ListNode *temp= new ListNode(0,head);
+        while(q){
+            if(p == head) head = q;
+            else temp->next = q; //temp指向交换后的前面节点
+            p->next = q->next;   
+            q->next = p;     //上两句是交换两个相邻节点
+            temp = p;  //temp即交换后的后者
+            p = p->next;
+            q = p?p->next:nullptr;
+        }
+        return head;
+    }
+};*/
