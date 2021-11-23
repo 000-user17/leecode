@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int arrayPairSum(vector<int>& nums) {
+        /*思路：简而言之，就是先排序，我们要牺牲一个大数，所以就要牺牲的小一点，做法是
+        取与大数相差最小的另一个小数，即临近的前后取前；否则不这样取会导致有间隔，导致不能达到最大*/
+        sort(nums.begin(), nums.end());
+        int ans = 0;
+        for(int i=0 ; i<nums.size() ; i+=2){
+            ans += nums[i];
+        }
+        return ans;
+    }
+};
