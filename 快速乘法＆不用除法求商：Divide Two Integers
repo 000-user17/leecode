@@ -1,0 +1,101 @@
+class Solution {
+public://学习快速乘法
+    int divide(int dividend, int divisor) {
+        //思路：利用一个数组保存2的指数倍的divisor，然后让divident去减里面的元素，并根据元素的倍数来加ans，得到最终的商
+        if(dividend == INT_MIN){
+            if(divisor == -1) return INT_MAX;
+        }
+        if(divisor == INT_MIN){
+            if(dividend == INT_MIN) return 1;
+            else return 0;
+        }
+        if(divisor == 1) return dividend;
+        if(dividend ==0) return 0;
+        bool flag = true; //表示是否同号,true表示同号
+        if(dividend>0){  //把dividend和divisor都变为负数，这样表示的数值范围更大不容易越界（dividend可能位INT_MIN)
+            dividend = -dividend;
+            flag = !flag;
+        }
+        if(divisor>0){
+            divisor = -divisor;
+            flag = !flag;
+        }
+        //以上位特殊情况
+        vector<int> divisors = {divisor};
+        int ans=0;
+        while(divisors.back() >= dividend - divisors.back()){ //为了防止相加越界
+            divisor+=divisors.back(); //不用乘法,让divisor位2的指数倍
+            divisors.emplace_back(divisor);
+        }
+        for(int i = divisors.size()-1 ; i>=0 ; --i){
+            if(dividend - divisors[i] <= 0){  //如果减了之后还有
+                dividend-=divisors[i];
+                ans += (1<<i); //(1<<i)表示当前divisors[i]是初始divisor的几倍
+            }
+        }
+        return flag?ans:-ans;
+    }
+};
+
+/*不知道为什么有些大的数出来是错的
+class Solution {
+public:
+    int divide(int dividend, long long divisor) {
+        if(dividend == INT_MIN){
+            if(divisor == -1) return INT_MAX;
+        }
+        if(divisor == INT_MIN){
+            if(dividend == INT_MIN) return 1;
+            else return 0;
+        }
+        if(divisor == 1) return dividend;
+        if(dividend ==0) return 0;
+        bool flag = true; //表示是否同号,true表示同号
+        if(dividend>0){  //把dividend和divisor都变为负数，这样表示的数值范围更大不容易越界（dividend可能位INT_MIN)
+            dividend = -dividend;
+            flag = !flag;
+        }
+        if(divisor>0){
+            divisor = -divisor;
+            flag = !flag;
+        }
+        map<int,int> hashtable;
+        int ans=0, count=1;;
+        while(divisor > dividend){ //因为都是负数，所以被除数小于除数时说明能继续
+            hashtable[divisor] = count;
+            divisor+=divisor;
+            count<<=1; //count代表有多少个divisor,以2的指数增加
+        }
+        if(dividend == divisor) return flag?count:-count;
+        int a=0;
+        for(auto iter = hashtable.begin() ; iter != hashtable.end() ;){
+            if(dividend - iter->first < 0) {
+                ans+=iter->second;  
+                dividend = dividend - iter->first;
+                ++iter;
+            }
+            else{ //如果减到遇到哈希表中的divisors大了，则从小的开始减
+                iter = hashtable.begin(); 
+                if(dividend - iter->first >= 0) break;//如果减到原本的被除数大于等于0了，说明不含有divisor了
+            } 
+        }
+        return flag?ans:-ans;
+    }
+};
+*/
+
+/*class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        //time O(dividend/divisor)  space O(0),朴素的通过加法来寻找
+        if(dividend == INT_MIN && divisor == -1) return INT_MAX;
+        if(dividend == INT_MIN && divisor == 1) return INT_MIN;
+        int flag=1;
+        if(dividend<0 && divisor>0 || dividend>0 && divisor<0) flag = -1; 
+        int d = 0, i=0;
+        for(; d<abs(dividend) ; ++i){
+            d+=abs(divisor);
+        }
+        return d>abs(dividend)?(i-1)*flag:i*flag;
+    }
+};*/
