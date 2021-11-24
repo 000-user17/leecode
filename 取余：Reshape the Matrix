@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        //思路：根据改变后的结构一个一个的放进去，用到了取余
+        int m = mat.size(), n = mat[0].size(); //m代表原本mat的行数，n代表列数
+        if(m * n != r*c) return mat;
+        vector<vector<int>> ans;
+        vector<int> temp;
+        for(int i=0 ; i<m ; ++i){
+            for(int j=0 ; j<n ; ++j){
+                if((i*n+j+1)%c != 0 ) 
+                    temp.emplace_back(mat[i][j]);
+                else
+                {
+                    temp.emplace_back(mat[i][j]);
+                    ans.emplace_back(temp);
+                    temp = {};
+                }
+            }
+        }
+        return ans;
+    }
+};
