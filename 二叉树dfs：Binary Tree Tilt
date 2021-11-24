@@ -1,0 +1,64 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+//思路2 time O(n), space O(h)
+//相较下面的思路，这个算法利用一次dfs保存各个子树的所有节点和，并且计算ans
+    int helpdfs(TreeNode *root, int &ans){
+        if(!root) return 0;
+        int left = helpdfs(root->left,ans);
+        int right = helpdfs(root->right,ans);
+        ans+=abs(left-right);
+        return left+right+root->val;
+
+    }
+    int findTilt(TreeNode* root) {
+        int ans=0;
+        helpdfs(root, ans);
+        return ans;
+    }
+};
+
+/*class Solution {
+public:
+//思路1：分析问题，由于不需要保存改变后的数，因此只需要通过节点上的值进行计算即可
+//首先，各个节点变化后的数值为左子树所有节点的值的和减去右子树所有节点值的和的绝对值，所以需要深度遍历计算各个子树的和
+//然后再利用一个深度遍历对各个节点上计算左右子树和之差的绝对值，然后相加放入结果ans中
+//时间复杂度O(n^2)  space O(h^2)  ,n为节点数，h为树高
+    int dfssum(TreeNode* root){
+        if(!root) return 0;
+        int left=dfssum(root->left);
+        int right=dfssum(root->right);
+        return left+right+root->val;
+    } 
+
+    int void dfssum(TreeNode* root, int &sum){
+        if(!root) return ;
+        dfssum(root->left);
+        sum+=root->val;
+        dfssum(root->right);
+    } //另外一种算节点和的方法
+
+
+    void helpdfs(TreeNode *root, int &ans){
+        if(!root) return ;
+        helpdfs(root->left, ans);
+        ans+=abs(dfssum(root->left) - dfssum(root->right));
+        helpdfs(root->right, ans);
+
+    }
+    int findTilt(TreeNode* root) {
+        int ans=0;
+        helpdfs(root, ans);
+        return ans;
+    }
+};*/
