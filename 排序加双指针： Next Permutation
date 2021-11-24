@@ -1,0 +1,31 @@
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        //思路：双指针排序 time O(n^2), space O(logn)
+        //要找到下一个更大的字典序，要做两件事，第一件是找到要替换的位置，第二是将替换后面的数组排序
+        //先看第一件，要找到一个使之成为最小的下一个更大的字典序，我们设置双指针从后往前找，如果后面的元素小于等于前面的元素，则继续向前寻找，直到后面的元素大于前面的元素，停止，如果没有到数组的-1位置，则记录双指针指向分别的位置。此时，将后面的指针前移，继续像上述那样寻找，如果在本轮循环中也找到了，则比较前面的指针位置是否小于之前记录的位置，如果小于，则替换；这样直到第一层循环结束，就可以找到想要替换的最小位置了，然后swap前后指针所代表位置的元素值
+        //第一件事所做的其实是在找需要变换的最小的那位数，如103->130而不是301
+        //第二件事情做的是将swap过后的前面指针位置后的元素进行排序，让其达到真正意义上的最小的下一个更大字典序
+        int loc_pre=-1, loc_post=-1;//前者最小的要交换的前面的那个位置，后者表示要交换的后面的位置
+        for(int i=nums.size()-1 ; i>0 ; --i){
+            int j=i-1;
+            while(j>loc_pre && nums[j] >= nums[i]){ //j>=0必须在之前，先判断后面可能越界
+            //这里优化了以下，如果j大于之前的loc_pre，则直接不找了，只在小于loc_pre位置的元素里面找
+                --j;
+            }
+            if(j<0) continue;
+            if(j > loc_pre){
+                loc_pre = j;
+                loc_post = i;
+            }
+        }
+        if(loc_pre < loc_post){
+            swap(nums[loc_pre], nums[loc_post]);
+            sort(nums.begin()+loc_pre+1, nums.end());
+        }
+        else{
+            sort(nums.begin(), nums.end());
+            //sort(arr, arr + 5, greater<int>());从大到小排列
+        }
+    }
+};
