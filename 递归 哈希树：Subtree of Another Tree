@@ -1,0 +1,118 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+//思路：time O(nm),n为root的节点数，m为subroot节点数， space O(h+m) h为n的树高
+//dfs求解：利用dfs暴力搜索，对于每个root的节点都判断是否和subroot一致
+    bool helpdfs(TreeNode* root, TreeNode * subroot){  
+        if(((root == nullptr) ^ (subroot == nullptr)) == 1) return false; //如果不同是为空则说明不同
+        if(!root && !subroot) return true;
+        if(root->val != subroot->val) return false;
+        if(root->val == subroot->val){
+            bool left = helpdfs(root->left, subroot->left);
+            bool right = helpdfs(root->right, subroot->right);
+            return left & right;
+        }
+        return false;
+    }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        if(!root) return false;
+        return helpdfs(root, subRoot) | isSubtree(root->left, subRoot) | isSubtree(root->right, subRoot);
+    }
+};
+
+/*class Solution {
+    //dfs简便版本
+public:
+    bool check(TreeNode *o, TreeNode *t) {
+        if (!o && !t) {
+            return true;
+        }
+        if ((o && !t) || (!o && t) || (o->val != t->val)) {
+            return false;
+        }
+        return check(o->left, t->left) && check(o->right, t->right);
+    }
+
+    bool dfs(TreeNode *o, TreeNode *t) {
+        if (!o) {
+            return false;
+        }
+        return check(o, t) || dfs(o->left, t) || dfs(o->right, t);
+    }
+
+    bool isSubtree(TreeNode *s, TreeNode *t) {
+        return dfs(s, t);
+    }
+};
+*/
+
+/* 
+//哈系树官方解法
+class Solution {
+public:
+    static constexpr int MAX_N = 1000 + 5;
+    static constexpr int MOD = int(1E9) + 7;
+
+    bool vis[MAX_N];
+    int p[MAX_N], tot;
+    void getPrime() {  //获得质数数组
+        vis[0] = vis[1] = 1; tot = 0;
+        for (int i = 2; i < MAX_N; ++i) {
+            if (!vis[i]) p[++tot] = i;
+            for (int j = 1; j <= tot && i * p[j] < MAX_N; ++j) {
+                vis[i * p[j]] = 1;
+                if (i % p[j] == 0) break;
+            }
+        }
+    }
+
+    struct Status {
+        int f, s; // f 为哈希值 | s 为子树大小
+        Status(int f_ = 0, int s_ = 0) 
+            : f(f_), s(s_) {}
+    };
+
+    unordered_map <TreeNode *, Status> hS, hT;
+
+    void dfs(TreeNode *o, unordered_map <TreeNode *, Status> &h) {
+        h[o] = Status(o->val, 1);  //叶子节点的子树大小s为1
+        if (!o->left && !o->right) return;
+        if (o->left) {
+            dfs(o->left, h);
+            h[o].s += h[o->left].s;
+            h[o].f = (h[o].f + (31LL * h[o->left].f * p[h[o->left].s]) % MOD) % MOD;
+        }
+        if (o->right) {
+            dfs(o->right, h);
+            h[o].s += h[o->right].s;
+            h[o].f = (h[o].f + (179LL * h[o->right].f * p[h[o->right].s]) % MOD) % MOD;
+        }
+    }
+
+    bool isSubtree(TreeNode* s, TreeNode* t) {
+        getPrime();
+        dfs(s, hS);
+        dfs(t, hT);
+
+        int tHash = hT[t].f;
+        for (const auto &[k, v]: hS) {
+            if (v.f == tHash) {
+                return true;
+            }
+        } 
+
+        return false;
+    }
+};
+
+*/
