@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        //time complexity O(logn)  space O(1)
+        //思路，先利用二分法求出数组中target存在的某一位置，并设置双指针locpre和locpost指向
+        //target出现的最初位置和最后位置，通过判断是否nums[loc]发生改变而减少locpre和增加locpost
+        //返回locpre和locpost
+        int low = 0, high = nums.size()-1,med;
+        int loc_pre = -1, loc_post = -1;
+        if(high == -1) return {-1,-1};  
+        while(low <= high){  //二分法找target的某一位置
+            med = low + (high-low)/2;
+            if(target == nums[med]) {
+                loc_pre = med;
+                break;
+            }
+            if(target > nums[med]) low = med + 1;
+            if(target < nums[med]) high = med - 1; 
+        }
+        if(loc_pre != -1){  //如果找到了，进行位置确定
+            loc_post = loc_pre+1;  
+            while(loc_pre >=0 && nums[loc_pre] == target) --loc_pre;
+            while(loc_post < nums.size() && nums[loc_post] == target) ++loc_post;
+            ++loc_pre;   //因为最终loc指向的是不等于target的位置，所以要加一减一
+            --loc_post;
+        }
+        return {loc_pre, loc_post};
+    }
+};
