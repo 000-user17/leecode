@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int distributeCandies(vector<int>& candyType) {
+        //哈希集合记录已经遍历过的糖果类型，然后循环，循环推出条件是找到了n/2个类型的糖果或者查询完所有的糖果
+        unordered_set<int> hashtable;
+        int count = 0;
+        for(int i=0 ; i<candyType.size() && count<candyType.size()/2 ;++i ){
+            if(hashtable.count(candyType[i]) == 0){
+                hashtable.insert(candyType[i]);
+                ++count;
+            }
+        }
+        return count;
+    }
+};
+//unordered_set<int>(candyType.begin(), candyType.end()).size()  
+//集合的元素个数
