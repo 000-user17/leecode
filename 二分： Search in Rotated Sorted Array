@@ -1,0 +1,81 @@
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int n = nums.size()-1;
+        int low = 0, high = n, med;
+        while(low <= high){
+            med = low + (high- low)/2;
+            if(nums[med] == target) return med;
+            if(nums[0] <= nums[med]){ //0到med是有序的
+                if(target < nums[med] && target >= nums[0]) high = med - 1;//正规二分
+                else low = med + 1; //如果不是上面的两种情况，low都要+1,在这半段中寻找
+            }
+            else{ //如果0到med之间旋转了
+                if(target > nums[med] && target <= nums[n]) //正规二分
+                    low = med +1;
+                else high = med - 1;
+            }
+        }
+        return -1;
+    }
+};
+
+/*class Solution {
+public:
+   //由于题目要求的时间复杂度为O(log n )
+   //先利用递归法进行二分，来寻找旋转的位置
+   //时间复杂度 O(logn)  空间复杂度O(logn) （利用了递归)
+    void erfen(vector<int> nums, int low, int high, int& k){
+        int med = (low+high)/2;
+        if(low > high || med == nums.size()-1) return ; //边界条件，防止越界
+        if(nums[med] > nums[med+1]){ //如果找到了旋转位置，则赋值给k
+            k = med ;
+            return ;
+        }
+        else{
+            erfen(nums, low, med-1 , k); //左边寻找
+            erfen(nums,med+1, high, k);//右边寻找
+        }
+    }
+        
+    int search(vector<int>& nums, int target) {
+        int mid=-1, low, high;  //mid先找更换的位置
+        erfen(nums, 0, nums.size()-1, mid);
+        if(mid == -1){  //如果没有旋转，则mid=-1
+            low = 0;
+            high = nums.size()-1;
+        }
+        else{
+            if(target >= nums[0]){  //如果旋转了，并且大于第一个元素值，那么就在第一个到旋转位置进行二分
+                low = 0;
+                high = mid;
+            }
+            else{  //否则，在后半段进行二分
+                low = mid+1;
+                high = nums.size()-1;
+            } //根据不同情况来设置二分的low和high
+        }
+        while(low <= high){  //节省空间，再用mid做二分
+            mid = (low+high)/2;
+            if(target == nums[mid]) return mid;
+            if(nums[mid] > target)  {
+                high = mid - 1;
+            }
+            else{
+                low = mid + 1;
+            }
+        }
+        return target == nums[mid]? mid: -1;
+    }
+};*/
+
+/*class Solution {
+    //朴素解法
+public:
+    int search(vector<int>& nums, int target) {
+        for(int i=0 ; i<nums.size() ; ++i){
+            if(nums[i] == target) return i;
+        }
+        return -1;
+    }
+};*/
