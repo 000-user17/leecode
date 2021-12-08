@@ -1,0 +1,17 @@
+class Solution {
+public:
+//思路：要找到最大的元素个数，就是要找到相加次数最多的位置的个数，那么相加次数最多的位置就是ops
+//当中最小的行和列，不能同时取最小，而是要分开找最小的才行，即先确定行最小，再确定列最小
+    int maxCount(int m, int n, vector<vector<int>>& ops) {
+        int min_cow = INT_MAX, min_line = INT_MAX;
+        for(int i=0 ; i<ops.size() ; ++i){
+            if(ops[i][0] < min_cow){
+                min_cow = ops[i][0];
+            }
+            if(ops[i][1] < min_line){
+                min_line = ops[i][1];
+            }
+        }
+        return (m>min_cow?min_cow:m) * (n>min_line?min_line:n);
+    }
+};
