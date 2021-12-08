@@ -1,0 +1,60 @@
+class Solution {
+//这里可以用到但哈希表进行，但笔者懒得写了，大致就是只用一个哈希表记录list1，然后遍历list2来和哈希表进行交互查找
+public:
+//最坏时间：O(mn), 空间O(1),优化后的暴力查询
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        int n = list1.size(), m = list2.size();
+        vector<string> ans;
+        int min = INT_MAX;
+        for(int i=0 ; i<n && i<=min ; i++){  //i如果大于当前的min则直接退出
+            for(int j=0 ; j<m ; j++){
+                if(i + j > min) break; //如果下标和已经大于min了也直接退出本轮循环
+                if(list1[i] == list2[j]){
+                    if(i+j < min){
+                        min = i + j;
+                        ans.clear();
+                        ans.resize(0);
+                        ans.push_back(list1[i]);
+                        break;  //如果在list2中找到了最小的就不用往后看了，直接退出本轮循环
+                    }
+                    if(i + j == min){
+                        ans.push_back(list1[i]);
+                    }
+                }
+            } 
+        }
+        return ans;
+    }
+};
+/*class Solution {
+public:
+//空间复杂度 ： O(m+n) , 时间复杂度 O(max(m,n)) ,m和n为两个表的大小
+//思路：先将list1和list2放入两个哈希表中，哈希表的值为其在相应list中的index
+//遍历一次hashtable1，如果当前的饭店名对应在list1中index和list2中index加起来小于最小的index和，则清空ans
+//如果等于最小index和，则ans加入该饭店名
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        int n = list1.size(), m = list2.size();
+        vector<string> ans;
+        unordered_map<string , int> hashtable1, hashtable2;
+        for(int i=0 ; i< max(m,n) ; ++i){
+            if(i < n)
+                hashtable1[list1[i]] = i;
+            if(i<m)
+                hashtable2[list2[i]] = i;
+        }//先放入哈希表中
+        int min = INT_MAX;
+        for(auto [name , num] : hashtable1){
+            if(hashtable2.find(name) != hashtable2.end()){//如果hashtable2中存在hashtable1中的元素
+                if(num + hashtable2[name] < min){
+                    min = num + hashtable2[name];
+                    ans.clear();
+                    ans.resize(0); //ans清空并且重置为0的大小，因为后面用pushback开创新空间
+                }
+                if(num + hashtable2[name] == min){   //如果两者对应的index相加小于最小值min
+                    ans.push_back(name);  //我记得数组是不能emplace_back的
+                }
+            }
+        }
+        return ans;
+    }
+};*/
