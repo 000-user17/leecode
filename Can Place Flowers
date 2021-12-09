@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        //时间 O(m), 空间O(1)
+        //思路：分成三种情况讨论，第一种全零；第二种边界为0，中间有1；第三种边界有1中间有0
+        //设置一个bool量iszeros，如果在一次遍历的过程中发现1，则将iszeros取非，表示不是全零
+        //先看1：如果全为0，不难发现最大的n就是0的总数+1除以2
+        //再看2：如果边界为0，直到在遇到第一个1，随便画个数列可以返现中间可以放(slot/2)朵花
+        //再看3：边界都是1，形如1 0 0 0 0 1形式，中间可以放（slot-1）/2朵花
+        //最后，要判断是否还有没有计算的slot，此时为第2中情况，所以maxnew要加(slot/2)
+        int m = flowerbed.size(), slot=0, maxnew=0;//maxnew代表最大能添加的新❀数目，slot代表空隙
+        bool iszeros=true;  //设置是否全零bool量
+        if(m == 1) return !(flowerbed[0] & n);  //如果容量为1，则只有flowerbed[0]=n=1放不进去，节约代码时间
+        for(int i=0 ; i<m ; ++i){  //遍历一次
+            if(flowerbed[i] == 1 && iszeros){  //如果第一次遇到1，则当成情况2计算
+                iszeros = false;
+                maxnew += slot>0?slot/2:0;
+                slot = 0;
+            }
+            else if(flowerbed[i] == 1 && !iszeros){  //如果第i次，i>1 遇到1，当成情况3
+                maxnew += slot>1?(slot-1)/2:0;
+                slot = 0;
+            }
+            else if(flowerbed[i] == 0){  //为0，空隙slot加1
+                ++slot;
+            }
+        }
+        if(iszeros) return (slot+1)/2 >= n;  //全零情况
+        if(slot>0) maxnew += slot/2;  //最后看有没有漏算
+        return maxnew>=n;
+    }
+};
