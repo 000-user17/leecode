@@ -1,0 +1,44 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+//时间复杂 O(min(n1,n2)), 空间复杂度O(min(h1,h2)),n为节点个数，h为树高
+//思路： 利用先序遍历来进行操作，同时先序遍历root1和root2，将结果存储在root1当中，节省空间
+//新传入两个参数，pre记录根节点，isleft判断是在根节点的左子树递归还是右子树递归
+//分四种情况，如果root1和root2同时为空，则直接返回
+//如果root1不空，root2为空，也不用多余操作，直接返回
+//如果root1和root2非空，则值相加，继续先序遍历
+//如果root1为空，root2不空，则将root2节点添加到root1对应为空的子树上
+    void helpmergedfs(TreeNode *root1, TreeNode *root2, TreeNode *pre, bool isleft){
+        if(!root1 && !root2) return;
+        else if(!root1 && root2){
+            if(isleft){
+                pre->left = new TreeNode(root2->val, root2->left, root2->right);
+            }
+            else{
+                pre->right = new TreeNode(root2->val, root2->left, root2->right);
+            }
+            return;
+        }
+        else if(root1 && !root2) return;
+        else if(root1 && root2) root1->val += root2->val;
+        
+        helpmergedfs(root1->left, root2->left, root1, true);
+        helpmergedfs(root1->right, root2->right, root1, false);
+    }
+
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        if(!root1 && root2) return root2;
+        helpmergedfs(root1, root2, root1, false);
+        return root1;
+    }
+};
