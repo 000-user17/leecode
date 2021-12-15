@@ -1,0 +1,25 @@
+class Solution {
+public:
+/*时间复杂 O(n*字符的平均个数)， 空间复杂O(n),递归栈
+思路：利用递归，先定义全局变量ans保存结果，temp保存某一轮递归返回的结果，a表示当前判断是否相等的字符
+count代表相等字符个数
+总体就是一轮一轮的递归，将k-1的ans如111222转换为k的ans对应的3132这种形式*/
+    string ans;
+    string countAndSay(int n) {
+        if(n == 1) return "1";
+        ans = countAndSay(n-1);
+        int count=0;
+        string temp;
+        char a=ans[0];
+        for(int i=0; i<ans.size() ; ){
+            while(i<ans.size() && ans[i] == a){
+                ++count;
+                ++i;
+            }
+            temp.append(to_string(count)+a);
+            count=0;
+            if(i < ans.size()) a = ans[i];
+        }
+        return temp;
+    }
+};
