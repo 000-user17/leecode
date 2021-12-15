@@ -1,0 +1,24 @@
+class Solution {
+public:
+//时间复杂度 O(nlogn) ,空间 O(logn) 用到了快速排序
+    int maximumProduct(vector<int>& nums) {
+        sort(nums.begin(), nums.end());  //先排序
+        int n = nums.size();
+        if(n == 3) return (long)nums[n-1]*nums[n-2]*nums[n-3]; //如果n=3，则只有一个结果
+        if(nums[n-1] < 0){ //如果最大的数小于0，则最大积只能取最大的三个负数相乘
+            return (long)nums[n-1]*nums[n-2]*nums[n-3];
+        }
+        else if(nums[n-1] == 0){ //如果最后一个数小于0，则最大积非负，为0
+            return 0;
+        }
+        else{//nums[n-1] > 0  //如果最后一个数大于0
+            if(nums[n-3] <= 0){  //如果倒数第三个数小于0，则需要第一个和第二个数来和最大数相乘，取到非负最大积
+                return (long)nums[0]*nums[1]*nums[n-1];
+            }
+            else if(nums[n-3] > 0){ //如果倒数第三个数大于0，则比较三正数相乘和最小俩负数与最大正数积
+                return max((long)nums[0]*nums[1]*nums[n-1], (long)nums[n-1]*nums[n-2]*nums[n-3]);
+            }
+        }
+        return 0;
+    }
+};
