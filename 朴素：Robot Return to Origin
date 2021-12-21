@@ -1,0 +1,15 @@
+class Solution {
+public:
+//朴素法，看上下位置和左右位置是否不变
+//时间O(n), space O(1)
+    bool judgeCircle(string moves) {
+        int up=0, left=0;
+        for(int i=0 ; i<moves.size() ; ++i){
+            if(moves[i] == 'U') ++up;
+            else if(moves[i] == 'D') --up;
+            else if(moves[i] == 'L') ++left;
+            else --left;
+        }
+        return up==0 && left==0;
+    }
+};
