@@ -1,0 +1,26 @@
+class Solution {
+public:
+
+//朴素解法：用一个数组来记录元素i是否存在或者多
+//时间复杂度：O（n），空间复杂度O（n）
+    vector<int> findErrorNums(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> loc;
+        loc.resize(n+1);
+        vector<int> ans;
+        for(int i=0 ; i<n ; ++i){
+            loc[nums[i]]+=1;
+            if(loc[nums[i]] == 2) ans.emplace_back(nums[i]);
+        }
+        for(int i=1 ; i<=n ; ++i){
+            if(loc[i] == 0){
+                ans.emplace_back(i);
+                break;
+            }
+        }
+        return ans;
+    }
+    }
+};
+
+
