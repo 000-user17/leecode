@@ -1,0 +1,36 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+//利用哈希表保存便利过的节点，看k-root->val是否存在
+//时间O(n), 空间O(n+h) ,n为节点数，h为树高
+    bool dfs(TreeNode* root, unordered_map<int,int>& hashtable, int k){
+        if(!root) return false;
+        if(hashtable.find(root->val) == hashtable.end()) {
+            hashtable[root->val] = 1;
+            if((k>>1) != root->val && hashtable[k-root->val] == 1)
+                return true;
+            if((k>>1) == root->val && hashtable[k-root->val] == 2)
+            return true;
+        }
+        else{
+            hashtable[root->val]++;
+            if(hashtable[k-root->val] == 1)
+                return true;
+        }
+        return dfs(root->left, hashtable, k) | dfs(root->right, hashtable, k);
+    }
+    bool findTarget(TreeNode* root, int k) {
+        unordered_map<int,int> hashtable;
+        return dfs(root, hashtable, k);
+    }
+};
