@@ -1,0 +1,25 @@
+class Solution {
+public:
+//思路：排序方便避免重复，然后再向后回溯
+    void dfs(vector<int>& candidates , vector<int> temp , vector<vector<int>>& ans , int target, int index){
+        if(target == 0){
+            ans.push_back(temp);
+            return;
+        } 
+        for(int i=index ; i<candidates.size()&&target-candidates[i]>=0 ; ++i){
+            if(i>index && candidates[i] == candidates[i-1]){//避免重复，保证了如果当前元素和前一个元素相等，则不用该元素进行dfs。但是如果当前元素为1，其前面元素也为1，则不影响
+                continue;
+            }
+            temp.emplace_back(candidates[i]);
+            dfs(candidates, temp, ans, target-candidates[i], i+1);//向前回溯
+            temp.pop_back();
+        }  
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        sort(candidates.begin(), candidates.end());
+        dfs(candidates, temp, ans, target, 0);
+        return ans;
+    }
+};
