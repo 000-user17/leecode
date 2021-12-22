@@ -1,0 +1,23 @@
+class Solution {
+public:
+//题目没有解释清楚，简单来说就是将一个点周围和这个点本身的值相加取平均作为这个点的新值
+    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
+        vector<vector<int>> temp=img;//必须要设置temp，因为img要不变带入运算
+        int n=img.size(), m=img[0].size();//分别代表行数和列数
+        int loc[9][2]={{0,0},{0,1},{0,-1},{1,1},{1,0},{1,-1},{-1,0},{-1,-1},{-1,1}};
+        for(int i=0 ; i<n ; ++i){
+            for(int j=0 ; j<m ; ++j){
+                int ave=0, count=0;
+                for(int k=0 ; k<9 ; ++k){
+                    if(i+loc[k][0] >= 0 && j+loc[k][1]>=0 && i+loc[k][0]<n && j+loc[k][1]<m){
+                        ave += temp[i+loc[k][0]][j+loc[k][1]];
+                        ++count;
+                    }
+                }
+                img[i][j] = ave/count;
+            }
+        }
+        return img;
+            
+    }
+};
