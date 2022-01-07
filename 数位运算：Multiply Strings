@@ -1,0 +1,54 @@
+class Solution {
+public:
+//时间复杂度：O(mn), 空间复杂度O(m+n)
+//思路：因为字符串长度太长，用double计算都可能出错，因此简化思路，变成计算各个数位的值，而省去多余的0；因为两个数字相乘，其最大也就是m+n位，因此可以设置一个数组ans_temp，先计算两字符串对应数字各个数位数的积，保存在i+j的位置上；然后，将ans_temp中的每个k位置的十位上的数字加到k+1位置处，并将k位置模10.就得到乘积数字的各个数位的值，然后观察最高位是否位0，为0则从1位置开始放入ans。
+string multiply(string num1, string num2) {
+    int n=num1.size(), m=num2.size();
+    if(num1[0]=='0' || num2[0] == '0') return "0";
+    vector<long> ans_temp(m+n);
+    for(int i=0 ; i<n ; ++i){
+        long x = num1[i]-48;
+        for(int j=0 ; j<m ; ++j){
+            long y = num2[j]-48;
+            ans_temp[i+j+1] += x*y;
+        }
+    }
+    for(int i=ans_temp.size()-1 ; i>0 ; --i){
+        ans_temp[i-1] += ans_temp[i]/10;
+        ans_temp[i] = ans_temp[i] %10;
+    }
+    int index = ans_temp[0]>=1?0:1;
+    string ans;
+
+    for(int i=index ; i<ans_temp.size() ; ++i){
+        ans.push_back(ans_temp[i]+'0');
+    }
+    return ans;
+    }
+};
+
+/*这样暴力算会出错
+string multiply(string num1, string num2) {
+        double x=0, y=0, ans=0;
+        int n=num1.size(), m=num2.size();
+        for(int i=0 ; i<n ; ++i){
+            int high = n-i;
+            double count = 1, temp=num1[i]-48;
+            while(high>1){
+                --high;
+                count *= 10;
+            }
+            x += temp*count; 
+        }
+
+        for(int i=0 ; i<m ; ++i){
+            double count = 1, temp=num2[i]-48;
+            int high = m-i;
+            while(high>1){
+                --high;
+                count *= 10;
+            }
+            ans += (temp*count*x);
+        }
+        return to_string(ans);
+    }*/
