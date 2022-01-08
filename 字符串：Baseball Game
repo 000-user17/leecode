@@ -1,0 +1,33 @@
+class Solution {
+public:
+ //朴素解法，即题目表述转化成代码形式可以优化空间，即相当于滑动窗口
+ //时间复杂度O(n), 空间复杂度O(n)
+//学习了新的方法 ： stoi( string ) 可以将string类型数字转化为数字
+    int calPoints(vector<string>& ops) {
+        int ans=0, index=-1; //index is the value of newest value's index of record
+        vector<string> record;
+        for(int i=0 ; i<ops.size() ; ++i){
+            if(ops[i] == "C"){
+                record.pop_back();
+                --index;
+            }
+            else if(ops[i] == "+"){
+                string temp = to_string(stoi(record[index])+stoi(record[index-1]));
+                record.push_back(temp);
+                ++index;
+            }
+            else if(ops[i] == "D"){
+                record.push_back(to_string(2*stoi(record[index])));
+                ++index;
+            }
+            else{ //其他情况就包含了负数和正数情况
+                record.push_back(ops[i]);  //字符串的添加不能用push_back
+                ++index;
+            }
+        }
+        while(index>=0){
+            ans += stoi(record[index--]);
+        }
+        return ans;
+    }
+};
