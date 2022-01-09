@@ -1,0 +1,38 @@
+class Solution {
+public:
+//时间复杂度 O(n), 空间复杂度O(1)
+//思路：因为最多只允许删除一个字符，所以不用写递归；利用双指针法，一个后移一个前移，如果遇到了字符不相等的情况，就将左指针向前移动一位，再次和右指针对比，判断移动后是否为回文；再将右指针向前移动一位，判断是否是回文。两者之间成立其一即满足，或者字符串s本来就是回文，也满足。
+    bool validPalindrome(string s) {
+        int left=0, right=s.size()-1;
+        bool isPalindrome=true;
+        while(left<=right && isPalindrome){
+            if(s[left] == s[right]){
+                ++left;
+                --right;
+            }
+            else{
+                int templ = left+1, tempr = right;
+                bool templis=true, tempris = true;
+                while(templ<=tempr){
+                    if(s[templ] != s[tempr]){
+                        templis = false;
+                        break;
+                    }
+                    ++templ;
+                    --tempr;
+                }
+                templ = left; tempr = right-1;
+                while(templ<=tempr){
+                    if(s[templ] != s[tempr]){
+                        tempris = false;
+                    }
+                    ++templ;
+                    --tempr;
+                }
+                isPalindrome = tempris | templis;
+                return isPalindrome;
+            }
+        }
+        return isPalindrome;
+    }
+};
