@@ -1,0 +1,22 @@
+class Solution {
+public:
+//时间复杂度：O(log n), 空间复杂度O(1)
+    bool hasAlternatingBits(int n) {
+        //设置两个cur和pre，分别保存当前的2进制最低位和n除以2前的2进制最低位置
+        int cur, pre;
+        bool first = true;//first表示是否位第一次执行，因为第一次pre没有值
+        while(n){  //pre和cur异或，如果不为1则返回false
+            if(first){
+                cur = n & 1;
+                n /= 2;
+                first = false;
+                continue;
+            }
+            pre = cur;
+            cur = n & 1;
+            if(cur ^ pre != 1) return false; 
+            n /= 2;
+        }
+        return true;
+    }
+};
