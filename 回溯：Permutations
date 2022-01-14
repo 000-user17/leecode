@@ -1,0 +1,68 @@
+class Solution {
+public:
+//回溯法，时间复杂度 O(n*排列组合个数), 空间复杂度O(n) 
+    void huisu(vector<vector<int>> &ans, vector<int> &temp, set<int> &hashset, vector<int> nums, int index){ //temp暂存回溯过程中的一部分数字，hashset用于回溯过程跳过已经存储在temp中的数字，nums是待解决数组，index是当前回溯nums位置下标
+        if(temp.size() == nums.size()){  //当temp放满时，存放结果到ans，返回
+            ans.push_back(temp);
+            return;
+        }
+        if(index == nums.size()) return; //如果下标超过nums上界，返回
+
+        if(hashset.count(nums[index])) { //如果temp中已经存在当前回溯位置元素，则向后回溯
+            huisu(ans, temp, hashset, nums, index+1);
+            return; //返回，不用执行下面的语句
+        }
+        
+        for(int i=0 ; i<nums.size() ; ++i){  //如果上面情况都不满足，说明hashset没有当前回溯元素，则从0开始在各个nums位置开始进行回溯
+            if(hashset.count(nums[i]) == 0){
+                temp.emplace_back(nums[i]);
+                hashset.insert(nums[i]);
+                huisu(ans, temp, hashset, nums, 0); //从0开始，进行temp的下一位置回溯
+                hashset.erase(nums[i]);
+                temp.pop_back();
+            }
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        set<int> hashset;
+        int index=0;
+        huisu(ans, temp, hashset, nums, index);
+        return ans;
+
+    }
+};
+
+/*
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+
+        List<Integer> output = new ArrayList<Integer>();
+        for (int num : nums) {
+            output.add(num);
+        }
+
+        int n = nums.length;
+        backtrack(n, output, res, 0);
+        return res;
+    }
+
+    public void backtrack(int n, List<Integer> output, List<List<Integer>> res, int first) {
+        // 所有数都填完了
+        if (first == n) {
+            res.add(new ArrayList<Integer>(output));
+        }
+        for (int i = first; i < n; i++) {
+            // 动态维护数组
+            Collections.swap(output, first, i);
+            // 继续递归填下一个数
+            backtrack(n, output, res, first + 1);
+            // 撤销操作
+            Collections.swap(output, first, i);
+        }
+    }
+}
+
+。*/
