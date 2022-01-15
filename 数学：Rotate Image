@@ -1,0 +1,38 @@
+class Solution {
+public:
+// 00 01 02 12 22 21 20 11
+// 20 11 00 01 02 12 22 21
+//辅助数组方法：利用公式变换temp[i][n-j-1] = matrix[j][i]，从最外围开始到内围进行变换。
+    void rotate(vector<vector<int>>& matrix) {
+        int n=matrix.size();
+        for(int i=0 ; i<n/2 ; ++i){//一共要旋转n/2围
+            for(int j=0 ; j<n-2*i-1 ; ++j){//每围要旋转n-2*i-1个元素，因为每一个围都是下一行，每行少2*i个元素
+                int row=i, col=i+j;//外围1->3->9->7;2->6->8->4
+                //内围5，不需要进行变换
+                int temp_pre = matrix[row][col], temp_cur;
+
+                for(int k=0 ; k<4 ; ++k){//每个围每次要旋转四次，然后同行下列元素旋转
+                    temp_cur = matrix[col][n-row-1];
+                    matrix[col][n-row-1] = temp_pre;
+                    temp_pre = temp_cur;
+
+                    temp_cur = row;
+                    row = col;
+                    col = n-temp_cur-1;
+                }
+            }
+        }
+    }
+};
+
+/*朴素法：创建一个新的矩阵，利用公式变换temp[i][n-j-1] = matrix[j][i];
+        int n=matrix.size();
+        vector<vector<int>> temp;
+        temp.resize(n, vector<int>(n));
+        for(int i=0 ; i<n ; ++i){
+            for(int j=0 ; j<n ; ++j){
+                temp[i][n-j-1] = matrix[j][i];
+            }
+        }
+        matrix = temp;
+*/
