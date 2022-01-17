@@ -1,0 +1,61 @@
+class Solution {
+public:
+//时间复杂度 O(nklogk), 空间复杂度O(nk) n为字符串个数，k为字符串最大字符数
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> ans;
+        unordered_map<string, vector<string>> hashtable;
+        int n=strs.size();
+        for(string str : strs){
+            string key = str;
+            sort(key.begin(), key.end());//对字符串排序，如果相同则排序后相同
+            hashtable[key].emplace_back(str);//将排序好的字符串作为键值，将排序后相等的字符加入
+        }
+        for(auto iter=hashtable.begin() ; iter!=hashtable.end() ; ++iter){
+            ans.emplace_back(iter->second);
+        }
+        return ans;
+    }
+};
+/*class Solution {
+public:
+//朴素方法：利用两个哈希表判断两个字符串各个字符是否相等，时间复杂度O(n^2k),空间复杂度O(n+k),n为字符串个数，k为字符串最大字符个数
+    bool isAnagram(string str1, string str2){
+        if(str1.size() == str2.size()){
+            unordered_map<char,int> hashtable1;
+            unordered_map<char,int> hashtable2;
+            for(int i=0 ; i<str1.size() ; ++i){
+                    ++hashtable1[str1[i]];
+                    ++hashtable2[str2[i]];
+            }
+            for(auto [str, num] : hashtable1){
+                if(hashtable2[str] != num)
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> ans;
+        vector<string> temp;
+        int n=strs.size();
+        vector<int> visited(n);//用于判断该字符是否已经放入ans中，如果放入则跳过
+        for(int i=0 ; i<n ; ++i){
+            if(visited[i] == 0){
+                temp.push_back(strs[i]);
+                visited[i] = 1;
+            }
+            else continue;
+            for(int j=i+1 ; j<n ; ++j){
+                if(visited[j]==0 && isAnagram(strs[i], strs[j])){
+                    temp.push_back(strs[j]);
+                    visited[j] = 1;
+                }
+            }
+            ans.emplace_back(temp);
+            temp.resize(0);//清空temp
+        }
+        return ans;
+    }
+};*/
